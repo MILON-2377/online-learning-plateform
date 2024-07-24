@@ -1,0 +1,32 @@
+/* styles/OurStudentsSay.module.css */
+
+.testimonialContainer {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .testimonialWrapper {
+    display: flex;
+    animation: scroll 30s linear infinite;
+  }
+  
+  .testimonialCard {
+    flex: 0 0 auto;
+    width: 300px; /* Adjust based on your design */
+    margin: 0 10px; /* Adjust space between cards */
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  @keyframes scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  
