@@ -1,6 +1,12 @@
 "use client";
 
+import { useAuth } from "@/AuthProvider/AuthProvider";
+
 export default function Navbar() {
+
+  const {user} = useAuth();
+
+
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -45,7 +51,7 @@ export default function Navbar() {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+          <a href="/" className="text-3xl font-bold px-5 ">EduConnect</a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
@@ -71,9 +77,66 @@ export default function Navbar() {
           </ul>
         </div>
         <div className="navbar-end">
-          <a href="/login" className="btn">LogIn</a>
+          <a href="/login" className="px-4 py-1 rounded-full bg-blue-700 text-white hover:bg-blue-500 ">LogIn</a>
         </div>
       </div>
     </div>
   );
 }
+
+
+// navbar titels handle 
+function NavbarTitlesHandle(user){
+  if(user?.profession === "student") return studentsNavLinks;
+  if(user?.profession === "teacher") return teacherNavtitles;
+}
+
+
+// students navbar links
+const studentsNavLinks = [
+  {
+    title:"Courses",
+    path:"/courses"
+  },
+  {
+    title:"Assignments",
+    path:"/assignments"
+  },
+  {
+    title:"My Classes",
+    path:"/my-classes"
+  },
+  {
+    title:"grades",
+    path:"/grades"
+  },
+  {
+    title:"Messages",
+    path:"/messages"
+  },
+ 
+]
+
+// teacher navlinks
+const teacherNavtitles = [
+  {
+    title:"My Classes",
+    path:"/my-classes"
+  },
+  {
+    title:"Assignments",
+    path:"/assignments"
+  },
+  {
+    title:"Grades",
+    path:"/grades"
+  },
+  {
+    title:"Students",
+    path:"/students"
+  },
+  {
+    title:"Messages",
+    path:"/messages"
+  },
+]

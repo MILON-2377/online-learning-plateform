@@ -15,7 +15,7 @@ export default function LogIn() {
   const onSubmit = (data) => {};
 
   return (
-    <div className="flex flex-col items-center bg-gray-200 h-screen w-full justify-center">
+    <div className="flex flex-col items-center h-screen w-full justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex lg:w-[50%] gap-6  justify-between p-10 "
@@ -28,7 +28,7 @@ export default function LogIn() {
           </label>
           <label className="flex flex-col gap-1">
             <input
-              className="px-3 py-1 placeholder:text-white focus:outline-none bg-transparent border-white border-b-2"
+              className="px-3 py-1 placeholder:text-slate-500 focus:outline-none bg-transparent border-gray-200 border-b-2"
               placeholder="Email"
               {...register("email", {
                 required: "Required",
@@ -45,7 +45,7 @@ export default function LogIn() {
           </label>
           <label className="flex flex-col gap-1">
             <input
-              className="px-3 py-1 placeholder:text-white focus:outline-none bg-transparent border-white border-b-2"
+              className="px-3 py-1 placeholder:text-slate-500 focus:outline-none bg-transparent border-gray-200 border-b-2"
               placeholder="password"
               {...register("password", {
                 required: "Password is required",
@@ -69,18 +69,18 @@ export default function LogIn() {
         </div>
         {/* divider */}
         <div class="flex flex-col w-5 items-center">
-          <div className="w-[2px] h-full bg-white "></div>
+          <div className="w-[2px] h-full bg-gray-200 "></div>
           <span>or</span>
-          <div className="w-[2px] h-full bg-white "></div>
+          <div className="w-[2px] h-full bg-gray-200 "></div>
         </div>
 
         <div className="flex flex-col  w-full gap-4">
           <h1 className="text-xl font-bold">LogIn with Social </h1>
-          <button className="px-4 py-1 border flex items-center gap-2  border-white text-blue-700 hover:bg-gray-300 hover:text-blue-900 rounded-full w-full ">
+          <button className="px-4 py-1 border flex items-center gap-2  border-gray-200 text-blue-700 hover:bg-gray-300 hover:text-blue-900 rounded-full w-full ">
             <FaGoogle />
             <span>Google</span>
           </button>
-          <button className="px-4 flex items-center gap-2 py-1 border  border-white text-blue-700 hover:bg-gray-300 hover:text-blue-900 rounded-full w-full ">
+          <button className="px-4 flex items-center gap-2 py-1 border  border-gray-200 text-blue-700 hover:bg-gray-300 hover:text-blue-900 rounded-full w-full ">
             <FaFacebookF />
             <span>Facebook</span>
           </button>
