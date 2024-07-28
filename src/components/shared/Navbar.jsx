@@ -3,9 +3,12 @@
 import { useAuth } from "@/AuthProvider/AuthProvider";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 export default function Navbar() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const user = { profession: "Teacher" };
   const navbarLinks = NavbarTitlesHandle(user);
   const router = useRouter();
   const path = usePathname();
@@ -47,11 +50,13 @@ export default function Navbar() {
                 <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
                   {/* Sidebar content here */}
                   {navbarLinks?.map((item, index) => (
-                    <li key={index}>
-                      <a className="text-slate-700  " href={item.path}>
-                        {item.title}
-                      </a>
-                    </li>
+                    <NavbarLinks
+                      key={index}
+                      href={item.path}
+                      isActive={path === item.path}
+                    >
+                      {item.title}
+                    </NavbarLinks>
                   ))}
                 </ul>
               </div>
@@ -62,14 +67,17 @@ export default function Navbar() {
           </a>
 
           {/* navbar links section for lg device */}
-          <div className="flex items-center gap-5 px-5 ">
+          <div className=" sm:hidden  lg:flex items-center gap-5 px-5 ">
             {navbarLinks?.map((item, index) => (
-              <Link 
-              className={path === item.path ? " px-3 py-1 border border-gray-200 rounded-full font-semibold text-blue-500 " : " "}
-              href={item.path} 
-              key={index}>
+              <NavbarLinks
+                key={index}
+                href={item.path}
+                isActive={path === item.path}
+                pathNam = {path}
+                nestedLinks={item.nestedLinks}
+              >
                 {item.title}
-              </Link>
+              </NavbarLinks>
             ))}
           </div>
         </div>
@@ -87,7 +95,47 @@ export default function Navbar() {
   );
 }
 
-// navbar titels handle
+// navbarLink component with animation
+const NavbarLinks = ({ href, isActive, children, nestedLinks, pathNam }) => {
+  const [isOpen, setOpen] = useState(false);
+  return (
+    <div className="relative" onMouseEnter={() => setOpen(true)}>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+        className={`px-3 py-1 border rounded-full ${
+          isActive ? "border-gray-200 bg-blue-500 text-white" : ""
+        }`}
+      >
+        <Link href={href} className="text-slate-700">
+          {children}
+        </Link>
+      </motion.div>
+      {nestedLinks && isOpen && (
+        <div
+          onMouseLeave={() => setOpen(false)}
+          className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg"
+        >
+          <ul className="py-1">
+            {nestedLinks.map((link, index) => (
+              <li key={index} className={ pathNam === link.path ? "hover:bg-gray-100 text-blue-500 " : "hover:bg-gray-100"}>
+                <Link
+                  href={link.path}
+                  className="block px-4 py-2 text-sm text-gray-700"
+                >
+                  {link.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// navbar titels handler
 function NavbarTitlesHandle(user) {
   if (user?.profession === "Student") return studentsNavLinks;
   if (user?.profession === "Teacher") return teacherNavtitles;
@@ -125,7 +173,11 @@ const teacherNavtitles = [
   },
   {
     title: "Assignments",
-    path: "/assignments",
+    path: "/assignments/teacher",
+    nestedLinks: [
+      { title: "All Assignments", path: "/assignments/teacher/all" },
+      { title: "Create Assignments", path: "/assignments/teacher/create" },
+    ],
   },
   {
     title: "Grades",
