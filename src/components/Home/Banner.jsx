@@ -5,10 +5,10 @@ import banner1 from "../../../public/banner.jpg";
 
 export default function Banner() {
   return (
-    <div className=" mt-20 flex lg:flex-row  sm:flex-col-reverse justify-between">
-      <div className=" lg:w-[50%] ">
+    <div className=" mt-20 flex lg:flex-row bg-white  sm:flex-col-reverse justify-between">
+      <div className=" lg:w-[60%] p-10 ">
         <Image
-          className="w-[95%] lg:w-full h-[400px] object-cover mx-auto mt-5 "
+          className="w-[95%] lg:w-full rounded-full h-[400px] object-cover mx-auto mt-5 "
           src={banner1}
           alt="banner image"
         />

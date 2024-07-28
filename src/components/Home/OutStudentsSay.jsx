@@ -49,9 +49,9 @@ export default function OurStudentsSay() {
     <div className=" relative overflow-hidden bg-gray-100 p-10">
       <div className={styles.testimonialContainer}>
         <div className={styles.testimonialWrapper}>
-          {extendedTestimonials.map((testimonial) => (
+          {extendedTestimonials.map((testimonial, index) => (
             <div
-              key={testimonial.id}
+              key={index + 2}
               className={styles.testimonialCard}
             >
               <div className="w-24 h-24 mb-4 flex items-center justify-center">

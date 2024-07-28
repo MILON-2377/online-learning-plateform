@@ -17,7 +17,7 @@ export default function ClientLayout({ children }) {
           <div>
             <Navbar />
           </div>
-          {children}
+          <main>{children}</main>
         </body>
       </html>
     </AuthProvider>

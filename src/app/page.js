@@ -8,7 +8,7 @@ import OurStudentsSay from "@/components/Home/OutStudentsSay";
 
 export default function Home() {
   return (
-    <main className=" flex flex-col gap-[300px] ">
+    <main className=" flex flex-col gap-[300px] bg-white ">
       {/* banner section */}
       <Banner />
 
