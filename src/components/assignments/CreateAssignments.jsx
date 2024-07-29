@@ -6,6 +6,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function CreateAssignments() {
   const {
@@ -16,13 +18,32 @@ export default function CreateAssignments() {
   } = useForm();
   const [dueDateRange, setDueDateRange] = useState([null, null]);
 
-  const onSubmit = (data) => {};
+  const onSubmit = async (data) => {
+    try {
+      const assignmentsRes = await axios.post("/api/create-assignments", {
+        ...data,
+      });
+
+      if (assignmentsRes.data.message) {
+        Swal.fire({
+          title: "Success!",
+          text: "Assignment created successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        reset();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <div className="flex items-center justify-center  mx-auto rounded-md p-5 flex-col border border-gray-200">
+    <div className="flex items-center justify-center  mx-auto p-5 flex-col ">
       <div className="p-5">
         <h1 className="text-3xl font-bold ">Create New Assignment</h1>
       </div>
+      <div className="divider">or</div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className=" w-full flex flex-col lg:flex-row lg:justify-between gap-5 p-10 "
@@ -61,9 +82,7 @@ export default function CreateAssignments() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <div className="relative w-full">
                 <DatePicker
-                  {...register("due date", {
-                    required: "due date is required",
-                  })}
+                  {...register("dueDate")}
                   value={dueDateRange[0]}
                   onChange={(newValue) =>
                     setDueDateRange([newValue, dueDateRange[1]])
@@ -72,7 +91,7 @@ export default function CreateAssignments() {
                     TextField: (props) => (
                       <TextField
                         {...props}
-                        className="mt-1 block w-full px-3 py-1 border border-gray-200 rounded-md"
+                        className="mt-1 block w-full px-3 py-1 border -z-10 border-gray-200 rounded-md"
                       />
                     ),
                   }}
@@ -89,18 +108,22 @@ export default function CreateAssignments() {
             <select
               defaultValue=""
               {...register("subject", { required: "subject is required" })}
-              className="select select-bordered"
+              className="select border border-gray-200 focus:outline-none "
             >
               <option disabled value="">
-                Select the subject?
+                Select the subject
               </option>
-              <option>Han Solo</option>
-              <option>Greedo</option>
+              <option>Math</option>
+              <option>English</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Biology</option>
+              <option>History</option>
             </select>
           </label>
         </div>
 
-          <div className="divider divider-horizontal">or</div>
+        <div className="divider lg:divider-horizontal">or</div>
 
         <div className="w-full flex flex-col gap-5 ">
           {/* attached file */}
@@ -109,7 +132,7 @@ export default function CreateAssignments() {
             <select
               {...register("priority", { required: "priority is required" })}
               defaultValue=""
-              className="select select-bordered w-full "
+              className="select border border-gray-200 focus:outline-none w-full "
             >
               <option disabled value="">
                 Select priority
@@ -127,7 +150,7 @@ export default function CreateAssignments() {
               {...register("instructions", {
                 required: "instructions is required",
               })}
-              className="textarea textarea-bordered"
+              className="textarea border border-gray-200 focus:outline-none"
               placeholder="Provide any additional instructions"
             ></textarea>
           </label>

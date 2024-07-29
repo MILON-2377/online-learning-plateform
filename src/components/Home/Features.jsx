@@ -9,56 +9,56 @@ const features = [
     title: "Course Management",
     description: "Organize and deliver engaging courses with ease.",
     icon: "📚", // Book with a checkmark
-    img: "path/to/image1.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 2,
     title: "Virtual Classrooms",
     description: "Foster interactive learning through live sessions.",
     icon: "📹", // Video call
-    img: "path/to/image2.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 3,
     title: "Assessments and Analytics",
     description: "Track progress and personalize learning paths.",
     icon: "📊", // Bar chart
-    img: "path/to/image3.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 4,
     title: "Resource Library",
     description: "Access a vast collection of educational materials.",
     icon: "📖", // Open book
-    img: "path/to/image4.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 5,
     title: "Discussion Forums",
     description: "Engage with peers and instructors in lively discussions.",
     icon: "💬", // Speech bubble
-    img: "path/to/image5.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 6,
     title: "Certification Programs",
     description: "Earn certifications to showcase your achievements.",
     icon: "🏆", // Trophy
-    img: "path/to/image6.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 7,
     title: "Mobile Access",
     description: "Learn on the go with our mobile-friendly platform.",
     icon: "📱", // Mobile phone
-    img: "path/to/image7.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
   {
     id: 8,
     title: "Customizable Dashboards",
     description: "Personalize your dashboard to fit your learning needs.",
     icon: "⚙️", // Gear
-    img: "path/to/image8.jpg", // Replace with actual image path
+    img: "", // Replace with actual image path
   },
 ];
 

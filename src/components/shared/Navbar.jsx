@@ -15,8 +15,8 @@ export default function Navbar() {
   // console.log(user);
 
   return (
-    <div className="w-full">
-      <div className="navbar w-full bg-base-100">
+    <div className="w-full  ">
+      <div className={`navbar w-full border-b-gray-200 ${path === "/assignments/teacher/all" ? "border-b-0" : " border-b  "} `}>
         <div className="navbar-start">
           {/* dropdown drawer for md device section */}
           <div className="dropdown lg:hidden ">
@@ -54,6 +54,8 @@ export default function Navbar() {
                       key={index}
                       href={item.path}
                       isActive={path === item.path}
+                      pathNam={path}
+                      nestedLinks={item.nestedLinks}
                     >
                       {item.title}
                     </NavbarLinks>
@@ -73,7 +75,7 @@ export default function Navbar() {
                 key={index}
                 href={item.path}
                 isActive={path === item.path}
-                pathNam = {path}
+                pathNam={path}
                 nestedLinks={item.nestedLinks}
               >
                 {item.title}
@@ -104,8 +106,8 @@ const NavbarLinks = ({ href, isActive, children, nestedLinks, pathNam }) => {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
-        className={`px-3 py-1 border rounded-full ${
-          isActive ? "border-gray-200 bg-blue-500 text-white" : ""
+        className={`px-3 py-1 rounded-full ${
+          isActive ? "border-gray-200 border text-blue-700 " : ""
         }`}
       >
         <Link href={href} className="text-slate-700">
@@ -115,11 +117,19 @@ const NavbarLinks = ({ href, isActive, children, nestedLinks, pathNam }) => {
       {nestedLinks && isOpen && (
         <div
           onMouseLeave={() => setOpen(false)}
-          className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg"
+          className="absolute top-full left-0 mt-2 w-48 bg-white border z-50  border-gray-200 rounded-md shadow-lg"
         >
           <ul className="py-1">
             {nestedLinks.map((link, index) => (
-              <li key={index} className={ pathNam === link.path ? "hover:bg-gray-100 text-blue-500 " : "hover:bg-gray-100"}>
+              <li
+                onClick={() => setOpen(false)}
+                key={index}
+                className={
+                  pathNam === link.path
+                    ? "hover:bg-gray-100 text-blue-500 "
+                    : "hover:bg-gray-100"
+                }
+              >
                 <Link
                   href={link.path}
                   className="block px-4 py-2 text-sm text-gray-700"
