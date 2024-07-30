@@ -2,6 +2,7 @@ import connect from "@/mongodb";
 import Assignments from "@/mongodb/models/assignmentsModels";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
+import { isDate } from "date-fns";
 
 // mongodb connection
 connect();
@@ -43,13 +44,24 @@ export async function GET(req) {
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
     const filters = searchParams.get("filters");
+    const search = searchParams.get("search");
     const parseFilters = filters ? JSON.parse(decodeURIComponent(filters)) : {};
-
-    // console.log(parseFilters);
 
     const skip = (page - 1) * limit;
 
     let filter = {};
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: new RegExp(search, "i") } },
+        { subject: { $regex: new RegExp(search, "i") } },
+      ];
+
+      if (isDate(search)) {
+        filter.dueDate = new Date(search);
+      }
+    }
+
     if (parseFilters.subject) {
       filter.subject = { $regex: new RegExp(parseFilters.subject, "i") };
     }
