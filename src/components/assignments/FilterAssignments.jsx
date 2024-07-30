@@ -1,5 +1,6 @@
 "use client";
 
+import FiltersItemsCatch from "@/Hooks/useFiltersItemsCatch";
 import { useState } from "react";
 import { MdArrowDropDown } from "react-icons/md";
 
@@ -7,15 +8,17 @@ export default function FilterAssignments({ onFilterChange }) {
   const [subject, setSubject] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [status, setStatus] = useState("");
-  const [submissionStatus, setSubmissionStatus] = useState("");
+  const [submitted, setSubmissionStatus] = useState("");
 
   const handleFilterChange = () => {
-    onFilterChange({
+    FiltersItemsCatch({
       subject,
       dueDate,
       status,
-      submissionStatus,
+      submitted,
     });
+
+    onFilterChange();
   };
 
   return (
@@ -70,21 +73,23 @@ export default function FilterAssignments({ onFilterChange }) {
             </li>
             <li className="">
               <select
-                value={submissionStatus}
+                value={submitted}
                 onChange={(e) => setSubmissionStatus(e.target.value)}
                 className="mt-1 block w-full rounded-md "
               >
                 <option value="" disabled>
                   Submission Status
                 </option>
-                <option value="">All</option>
                 <option value="submitted">Submitted</option>
                 <option value="not_submitted">Not Submitted</option>
               </select>
             </li>
-            <li onClick={handleFilterChange}
-            className="px-4 py-2 mt-5 text-center cursor-pointer rounded-md bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-400 "
-            >Apply Filters</li>
+            <li
+              onClick={handleFilterChange}
+              className="px-4 py-2 mt-5 text-center cursor-pointer rounded-md bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-400 "
+            >
+              Apply Filters
+            </li>
           </ul>
         </div>
       </div>

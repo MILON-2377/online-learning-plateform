@@ -42,6 +42,10 @@ const assignmentsSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status:{
+    type: String,
+    default: "Pending",
+  }
 });
 
 const Assignments =

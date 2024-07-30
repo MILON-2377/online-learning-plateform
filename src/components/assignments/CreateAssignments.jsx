@@ -5,7 +5,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TextField from "@mui/material/TextField";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -14,11 +14,17 @@ export default function CreateAssignments() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      dueDate: null,
+    },
+  });
   const [dueDateRange, setDueDateRange] = useState([null, null]);
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       const assignmentsRes = await axios.post("/api/create-assignments", {
         ...data,
@@ -72,7 +78,7 @@ export default function CreateAssignments() {
           </label>
 
           {/* due date  */}
-          <div className="w-full">
+          {/* <div className="w-full">
             <label
               htmlFor="dueDate"
               className="block text-sm font-medium text-gray-700"
@@ -82,7 +88,7 @@ export default function CreateAssignments() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <div className="relative w-full">
                 <DatePicker
-                  {...register("dueDate")}
+                  {...register("dueDate", { required: true })}
                   value={dueDateRange[0]}
                   onChange={(newValue) =>
                     setDueDateRange([newValue, dueDateRange[1]])
@@ -97,6 +103,36 @@ export default function CreateAssignments() {
                   }}
                   format="YYYY-MM-DD"
                   required
+                />
+              </div>
+            </LocalizationProvider>
+          </div> */}
+          <div className="w-full">
+            <label
+              htmlFor="dueDate"
+              className="block text-sm font-medium text-gray-700"
+            >
+              <span className="text-xl text-gray-500">Due Date</span>
+            </label>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <div className="relative w-full">
+                <Controller
+                  name="dueDate"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value, ref } }) => (
+                    <DatePicker
+                      value={value}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          inputRef={ref}
+                          className="mt-1 block w-full px-3 py-1 border -z-10 border-gray-200 rounded-md"
+                        />
+                      )}
+                    />
+                  )}
                 />
               </div>
             </LocalizationProvider>

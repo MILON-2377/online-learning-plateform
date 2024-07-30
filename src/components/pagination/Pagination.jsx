@@ -1,12 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+export default function Pagination({ currentPage, totalPages, onPageChange }) {
+  const total = Number(totalPages);
 
-export default function Pagination({ currentPage, totalPages }) {
-  const router = useRouter();
+  if (isNaN(total) || total <= 1) return null;
+
+  const pageNumbers = Array.from({ length: total }, (_, index) => index + 1);
 
   const handlePageChange = (page) => {
-    router.push(`/assignments?page=${page}`);
+    if (page >= 1 && page <= totalPages) {
+      onPageChange(page);
+    }
   };
 
   return (
@@ -16,20 +20,20 @@ export default function Pagination({ currentPage, totalPages }) {
         disabled={currentPage === 1}
         className="px-4 py-2 border border-gray-200 rounded-md bg-white text-gray-700 hover:bg-gray-200 disabled:opacity-50"
       >
-        Previos
+        Previous
       </button>
 
-      {[...Array(totalPages)].map((_, index) => (
+      {pageNumbers.map((page, index) => (
         <button
           key={index}
-          onClick={() => handlePageChange(index + 1)}
+          onClick={() => handlePageChange(page)}
           className={`mx-1 px-4 py-2 border border-gray-200 rounded-md ${
             currentPage === index + 1
               ? "bg-blue-500 text-white"
               : "bg-white text-gray-700 hover:bg-gray-200"
           }`}
         >
-          {index + 1}
+          {page}
         </button>
       ))}
 
