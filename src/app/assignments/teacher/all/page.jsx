@@ -44,7 +44,7 @@ export default function AllAssignmentsPage() {
   }, [page]);
 
   // total pages handle
-  const totalPages = Math.ceil(totalAssignments / 10);
+  const totalPages = totalAssignments ? Math.ceil(totalAssignments / 10) : 2;
 
   // filter handle section
 
@@ -93,13 +93,13 @@ export default function AllAssignmentsPage() {
   return (
     <div>
       {/* header section */}
-      <div className="flex items-center justify-between  px-7 py-5 border-b-gray-200 border-b ">
+      <div className="flex items-center justify-between -z-50  px-7 py-5 border-b-gray-200 border-b ">
         {/* filter search and sorting section */}
-        <div className="flex items-center gap-5 -z-50 ">
+        <div className="flex items-center gap-5">
           <FilterAssignments onFilterChange={handleFilterChange} />
 
           {/* search bar */}
-          <div className="">
+          <div className="-z-20">
             <label className="relative ">
               <input
                 onChange={(e) => setSearch(e.target.value)}
@@ -183,7 +183,9 @@ export default function AllAssignmentsPage() {
                   <FaTrash className="mr-2" />
                   Delete
                 </button>
-                <button className="bg-blue-500 text-white p-2 rounded flex items-center">
+                <button 
+                onClick={() => router.push(`/assignments/teacher/all/${item._id}`) }
+                className="bg-blue-500 text-white p-2 rounded flex items-center">
                   <FaEye className="mr-2" />
                   View
                 </button>

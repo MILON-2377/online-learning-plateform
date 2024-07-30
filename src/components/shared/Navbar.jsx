@@ -15,7 +15,7 @@ export default function Navbar() {
   // console.log(user);
 
   return (
-    <div className="w-full  ">
+    <div className="w-full z-20 ">
       <div className={`navbar w-full border-b-gray-200 ${path === "/assignments/teacher/all" ? "border-b-0" : " border-b  "} `}>
         <div className="navbar-start">
           {/* dropdown drawer for md device section */}

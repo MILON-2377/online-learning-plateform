@@ -22,16 +22,16 @@ export default function FilterAssignments({ onFilterChange }) {
   };
 
   return (
-    <div className=" flex items-center">
+    <div className=" flex items-center ">
       <div className="px-4 py-1 rounded-md border border-gray-200 hover:bg-gray-100 flex items-center ">
-        <div className="dropdown">
+        <div className="dropdown ">
           <div tabIndex={0} role="button" className=" flex items-center ">
             <span>Choose filters</span>
             <MdArrowDropDown className="text-4xl " />
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content menu border border-gray-200 relative top-12 -right-36 bg-gray-100  z-[1] w-80 rounded-md p-5 "
+            className="dropdown-content menu border border-gray-200 relative top-12 -right-36 bg-gray-100 z-10  w-80 rounded-md p-5 "
           >
             <li className="">
               <select
