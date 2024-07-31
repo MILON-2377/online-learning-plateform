@@ -32,7 +32,10 @@ export default function AllAssignmentsPage() {
   const page = parseInt(searchParams.get("page") || "1", 10);
 
   // fetching data using the tanstack query
-  const { assignmentsData, refetch, isLoading } = useAssignmentsData(page,search);
+  const { assignmentsData, refetch, isLoading } = useAssignmentsData(
+    page,
+    search
+  );
 
   useEffect(() => {
     setAssignments(assignmentsData.assignmentsData);
@@ -57,7 +60,6 @@ export default function AllAssignmentsPage() {
   // handle search
   const searchHandle = (e) => {
     e.preventDefault();
-    console.log(search);
     refetch();
   };
 

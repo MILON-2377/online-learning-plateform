@@ -32,7 +32,7 @@ export default function LogIn() {
       .then(async (response) => {
         const email = response.user.email;
         const userName = response.user.displayName;
-        // console.log(email);
+        console.log(response);
         try {
           const res = await axios.post("/api/createUser", {
             userName,
@@ -107,7 +107,7 @@ export default function LogIn() {
           </button>
         </div>
         {/* divider */}
-        <div class="flex flex-col w-5 items-center">
+        <div className="flex flex-col w-5 items-center">
           <div className="w-[2px] h-full bg-gray-200 "></div>
           <span>or</span>
           <div className="w-[2px] h-full bg-gray-200 "></div>

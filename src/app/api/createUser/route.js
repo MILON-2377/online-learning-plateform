@@ -2,10 +2,13 @@ import connect from "@/mongodb";
 import Users from "@/mongodb/models/userModels";
 import { NextResponse } from "next/server";
 
+
+// mongodb connnectiion
+connect();
+
 // user create api
 export async function POST(req){
 
-    await connect();
 
     try {
         const reqBody = await req.json();
@@ -32,7 +35,6 @@ export async function GET(req){
     try {
         const {searchParams} = new URL(req.url);
         const email = searchParams.get("email");
-        console.log(email);
     
         const user = await Users.findOne({email});
     

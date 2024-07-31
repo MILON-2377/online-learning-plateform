@@ -16,10 +16,14 @@ export default function Navbar() {
 
   return (
     <div className="w-full z-20 ">
-      <div className={`navbar w-full border-b-gray-200 ${path === "/assignments/teacher/all" ? "border-b-0" : " border-b  "} `}>
-        <div className="navbar-start">
+      <div
+        className={`navbar w-full border-b-gray-200 ${
+          path === "/assignments/teacher/all" || path === "/classes/teacher" ? "border-b-0" : " border-b  "
+        } `}
+      >
+        <div className=" navbar-start lg:hidden ">
           {/* dropdown drawer for md device section */}
-          <div className="dropdown lg:hidden ">
+          <div className="dropdown lg:hidden mr-5 sm:mr-0 ">
             <div className="drawer">
               <input id="my-drawer" type="checkbox" className="drawer-toggle" />
               <div className="drawer-content">
@@ -27,7 +31,7 @@ export default function Navbar() {
                 <label htmlFor="my-drawer" className="cursor-pointer">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 sm:h-8 sm:w-8 "
+                    className="h-5 w-5 sm:h-8 sm:w-8 mr-5 sm:mr-0 "
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -64,12 +68,22 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <a href="/" className=" md:hidden lg:block text-3xl font-bold px-5 ">
+          <a href="/" className=" lg:hidden ml-4 text-3xl font-bold ">
             EduConnect
           </a>
+        </div>
 
-          {/* navbar links section for lg device */}
-          <div className=" sm:hidden  lg:flex items-center gap-5 px-5 ">
+        {/* navbar links section for lg device */}
+        <div className=" hidden lg:flex items-center gap-5 p-5 ">
+          <div>
+            <a
+              href="/"
+              className=" md:hidden lg:flex items-center justify-center text-3xl font-bold "
+            >
+              EduConnect
+            </a>
+          </div>
+          <div className=" flex items-center gap-2 ">
             {navbarLinks?.map((item, index) => (
               <NavbarLinks
                 key={index}
@@ -85,6 +99,9 @@ export default function Navbar() {
         </div>
 
         <div className="navbar-end">
+          {
+            
+          }
           <a
             href="/login"
             className="px-4 py-1 rounded-full bg-blue-700 text-white hover:bg-blue-500 "
@@ -107,10 +124,12 @@ const NavbarLinks = ({ href, isActive, children, nestedLinks, pathNam }) => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.3 }}
         className={`px-3 py-1 rounded-full ${
-          isActive ? "border-gray-200 border text-blue-700 " : ""
+          isActive
+            ? "border-gray-200 border text-blue-700 font-[500] "
+            : "hover:border hover:border-gray-200"
         }`}
       >
-        <Link href={href} className="text-slate-700">
+        <Link href={href} className="block">
           {children}
         </Link>
       </motion.div>
@@ -178,8 +197,8 @@ const studentsNavLinks = [
 // teacher navlinks
 const teacherNavtitles = [
   {
-    title: "My Classes",
-    path: "/my-classes",
+    title: "Classes",
+    path: "/classes/teacher",
   },
   {
     title: "Assignments",

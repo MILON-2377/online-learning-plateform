@@ -33,11 +33,12 @@ export default function AuthProvider({ children }) {
       if (currentUser) {
         const { email, userName } = currentUser;
         try {
+          // console.log(email);
           const resUser = await axios.get(
             `/api/createUser?email=${email}`
           );
           setUser(resUser.data.user);
-          console.log(resUser.data.user);
+          // console.log(resUser.data.user);
         } catch (error) {
           console.log(error);
         }
