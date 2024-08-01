@@ -37,8 +37,6 @@ export function ViewClassDetails() {
     fetchData();
   }, [id]);
 
-  console.log(classData);
-
   return (
     <div className="p-16">
       <div className=" flex flex-col gap-5 lg:w-[50%] md:w-[80%] w-[95%] mx-auto ">
@@ -129,3 +127,4 @@ export function MakeClass() {
     </div>
   );
 }
+

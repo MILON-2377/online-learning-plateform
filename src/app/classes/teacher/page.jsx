@@ -6,15 +6,12 @@ import Loading from "@/components/Loading/Loading";
 import Pagination from "@/components/pagination/Pagination";
 import useClassesDataLoading from "@/dataFatching/ClassesData";
 import axios from "axios";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  FaBeer,
   FaBook,
   FaCalendarAlt,
-  FaCheckCircle,
-  FaClock,
-  FaEdit,
   FaEye,
   FaHeading,
   FaPlus,
@@ -38,7 +35,8 @@ export default function TeacherClasses() {
   // classes data loading
   const { classesData, refetch, isLoading } = useClassesDataLoading(
     user?.email,
-    page
+    page,
+    search
   );
 
   useEffect(() => {
@@ -83,6 +81,14 @@ export default function TeacherClasses() {
     });
   };
 
+  // handle search funtioality
+  const handleSearch = (e) => {
+    e.preventDefault();
+    refetch();
+    e.target.reset();
+  };
+
+
   // loading handle
   if (isLoading) return <Loading></Loading>;
 
@@ -108,7 +114,7 @@ export default function TeacherClasses() {
 
         {/* search bar  */}
         <div className=" flex items-center justify-between w-full lg:w-[40%] ">
-          <div className=" flex items-center gap-4">
+          <form onSubmit={handleSearch} className=" flex items-center gap-4">
             <label className="relative">
               <input
                 onChange={(e) => setSearch(e.target.value)}
@@ -127,7 +133,7 @@ export default function TeacherClasses() {
               </span>
             </label>
             <button className="btn ">Search</button>
-          </div>
+          </form>
 
           {/* action section */}
           <div className="lg:hidden block  ">
@@ -183,10 +189,13 @@ export default function TeacherClasses() {
               <div className="divider">or</div>
 
               <div className="card-actions justify-end">
-                <button className="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <Link
+                href='/classes/teacher/add-quize'
+                  className="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
                   <FaPlus className="mr-2" /> {/* Add icon */}
                   Add Quiz
-                </button>
+                </Link>
                 <button
                   onClick={() => router.push(`/classes/teacher/${item._id}`)}
                   className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"

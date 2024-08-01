@@ -4,7 +4,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export default function useClassesDataLoading(email,page) {
+export default function useClassesDataLoading(email,page,search) {
   const dataFatching = async () => {
     // const filters = FiltersItemsCatch();
     // const queryString = `filters=${encodeURIComponent(
@@ -15,7 +15,7 @@ export default function useClassesDataLoading(email,page) {
 
     try {
       const res = await axios.get(
-        `/api/create-class?email=${email}&page=${page}&limit=${limit}`
+        `/api/create-class?email=${email}&page=${page}&limit=${limit}&search=${search}`
       );
 
       return res.data;

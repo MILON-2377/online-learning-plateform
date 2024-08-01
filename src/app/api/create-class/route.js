@@ -33,16 +33,22 @@ export async function GET(req) {
     const email = searchParams.get("email");
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
+    const search = searchParams.get("search");
 
     const skip = (page - 1) * limit;
 
     const filter = { teacherId: email };
 
+    if (search) {
+      filter.$or = [
+        { teacherId: { $regex: new RegExp(email, "i") } },
+        { title: { $regex: new RegExp(search, "i") } },
+        { subject: { $regex: new RegExp(search, "i") } },
+      ];
+    }
+
     const total = await recordedClass.countDocuments(filter);
-    const classesData = await recordedClass
-      .find(filter)
-      .skip(skip)
-      .limit(10);
+    const classesData = await recordedClass.find(filter).skip(skip).limit(10);
 
     return NextResponse.json({ message: "success", classesData, total });
   } catch (error) {
