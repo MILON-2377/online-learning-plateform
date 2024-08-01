@@ -1,6 +1,9 @@
 "use client";
 
+import QuizesDisplaying from "@/components/Classes/Teacher/QuizesDisplaying";
+import { addQuize } from "@/redux/reduxReducer/AddQuizes/addQuizeSlice";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,8 +16,16 @@ export default function AddQuizes() {
   const [option4, setOption4] = useState("");
   const [correctOption, setCorrectOption] = useState("");
   const [quizesError, setQuizesError] = useState("");
+  const [allQuizes, setAllQuizes] = useState([]);
+  const [quizeNumber, setQuizeNumber] = useState(0);
+  const dispatch = useDispatch();
+  const quizes = useSelector((state) => state.quizes);
+  const quizeSubject = useSelector((state) => state.subject);
 
-  const handleNextQuize = () => {
+  // handle add quize
+  const handleAddQuize = (e) => {
+    e.preventDefault();
+
     if (subject.length === 0) {
       return setQuizesError("Subject is required");
     }
@@ -46,9 +57,16 @@ export default function AddQuizes() {
       option4,
       correctOption,
     };
+    dispatch(addQuize(allQuizes));
 
-    console.log(allQuizes);
+    const quzeNum = quizeNumber + 1;
+    setQuizeNumber(quzeNum);
+
+    e.target.reset();
   };
+
+  // handle previous view quize
+  const handlePreviousQuizeView = () => {};
 
   //toastify handle
   useEffect(() => {
@@ -62,129 +80,136 @@ export default function AddQuizes() {
   }, [quizesError]);
 
   return (
-    <div className="p-10 lg:w-[50%] md:w-[90%] w-[95%] mx-auto  ">
-      <div className="p-5 border-b border-gray-200 w-full ">
-        <h1 className="text-3xl font-bold text-gray-600 text-center ">
-          Create a New Quize
-        </h1>
-      </div>
+    <div className="p-10  ">
+      <div className=" w-full flex  md:flex-col lg:flex-row lg:justify-between gap-10 ">
+        <div className="w-full p-5 ">
+          <div className="w-full  ">
+            <h1 className="text-3xl font-bold text-gray-600 text-center ">
+              Create a New Quize
+            </h1>
+          </div>
+          <div className="divider"></div>
+          <div className="w-full">
+            <form
+              onSubmit={handleAddQuize}
+              className="flex items-center justify-between gap-5 "
+            >
+              <div className=" w-full flex flex-col  gap-5 ">
+                <label className="flex flex-col gap-1 focus:outline-none w-full mb-5 ">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Subject
+                  </span>
+                  <select
+                    defaultValue=""
+                    onChange={(e) => setSubject(e.target.value)}
+                    className="select border border-gray-200 focus:outline-none w-full"
+                  >
+                    <option disabled value="">
+                      Select subject
+                    </option>
+                    <option>Math</option>
+                    <option>Physics</option>
+                    <option>Chemistry</option>
+                    <option>Biology</option>
+                    <option>English</option>
+                  </select>
+                </label>
+                <label className="flex flex-col gap-1 w-full">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Quize Name
+                  </span>
+                  <input
+                    onChange={(e) => setQuizeName(e.target.value)}
+                    className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
+                    placeholder="Enter quize name"
+                    type="text"
+                  />
+                </label>
 
-      <div className="p-5">
-        <div className="w-full  ">
-          <div className="flex items-center justify-between gap-5 ">
-            <div className=" w-full flex flex-col  gap-5 ">
-              <label className="flex flex-col gap-1 w-full ">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Subject
-                </span>
-                <select
-                  defaultValue=""
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="select select-bordered w-full"
-                >
-                  <option disabled value="">
-                    Select subject
-                  </option>
-                  <option>Math</option>
-                  <option>Physics</option>
-                  <option>Chemistry</option>
-                  <option>Biology</option>
-                  <option>English</option>
-                </select>
-              </label>
-
-              <label className="flex flex-col gap-1 w-full">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Quize Name
-                </span>
-                <input
-                  onChange={(e) => setQuizeName(e.target.value)}
-                  className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
-                  placeholder="Enter quize name"
-                  type="text"
-                />
-              </label>
-
-              <label className="flex flex-col gap-1 w-full">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Add Option1
-                </span>
-                <input
-                  onChange={(e) => setOption1(e.target.value)}
-                  className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
-                  placeholder="Enter quize Add Option1"
-                  type="text"
-                />
-              </label>
-              <label className="flex flex-col gap-1 w-full">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Add Option2
-                </span>
-                <input
-                  onChange={(e) => setOption2(e.target.value)}
-                  className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
-                  placeholder="EnterAdd Option2"
-                  type="text"
-                />
-              </label>
-            </div>
-
-            <div className="divider divider-horizontal">or</div>
-            <div className=" w-full flex flex-col  gap-5 ">
-              <label className="flex flex-col gap-1 w-full">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Add Option3
-                </span>
-                <input
-                  onChange={(e) => setOption3(e.target.value)}
-                  className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
-                  placeholder="Enter Add Option3"
-                  type="text"
-                />
-              </label>
-              <label className="flex flex-col gap-1 w-full">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Add Option4
-                </span>
-                <input
-                  onChange={(e) => setOption4(e.target.value)}
-                  className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
-                  placeholder="Enter Add Option4"
-                  type="text"
-                />
-              </label>
-              <label className="flex flex-col gap-1 w-full">
-                <span className="text-gray-600 text-xl font-semibold ">
-                  Correct Option
-                </span>
-                <input
-                  onChange={(e) => setCorrectOption(e.target.value)}
-                  className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
-                  placeholder="Enter Correct Option"
-                  type="text"
-                />
-              </label>
-
-              <div className="w-full flex gap-5 items-center justify-between py-4 ">
-                <button
-                  disabled
-                  className=" cursor-pointer w-full border border-gray-200 bg-gray-100 active:bg-gray-50 hover:bg-gray-200 px-4 py-3 rounded-md  active:scale-95 transition-all duration-95 "
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNextQuize}
-                  className=" cursor-pointer w-full border border-gray-200 bg-gray-100 active:bg-gray-50 hover:bg-gray-200 px-4 py-3 rounded-md  active:scale-95 transition-all duration-95 "
-                >
-                  Next
-                </button>
+                <label className="flex flex-col gap-1 w-full">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Add Option1
+                  </span>
+                  <input
+                    onChange={(e) => setOption1(e.target.value)}
+                    className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
+                    placeholder="Enter quize Add Option1"
+                    type="text"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 w-full">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Add Option2
+                  </span>
+                  <input
+                    onChange={(e) => setOption2(e.target.value)}
+                    className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
+                    placeholder="EnterAdd Option2"
+                    type="text"
+                  />
+                </label>
               </div>
-            </div>
+
+              <div className="divider divider-horizontal">or</div>
+              <div className=" w-full flex flex-col  gap-5 ">
+                <label className="flex flex-col gap-1 w-full">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Add Option3
+                  </span>
+                  <input
+                    onChange={(e) => setOption3(e.target.value)}
+                    className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
+                    placeholder="Enter Add Option3"
+                    type="text"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 w-full">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Add Option4
+                  </span>
+                  <input
+                    onChange={(e) => setOption4(e.target.value)}
+                    className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
+                    placeholder="Enter Add Option4"
+                    type="text"
+                  />
+                </label>
+                <label className="flex flex-col gap-1 w-full">
+                  <span className="text-gray-600 text-xl font-semibold ">
+                    Correct Option
+                  </span>
+                  <input
+                    onChange={(e) => setCorrectOption(e.target.value)}
+                    className=" w-full px-4 py-3 rounded-md border border-gray-200 focus:outline-none "
+                    placeholder="Enter Correct Option"
+                    type="text"
+                  />
+                </label>
+                <div className="py-1">
+                  <p className="py-[22px]"></p>
+                  <button
+                    className={` ${
+                      allQuizes.length > 0 ? "bg-blue-600" : "bg-blue-500"
+                    } cursor-pointer w-full border  active:bg-blue-300 hover:bg-blue-400 text-white px-4 py-3 rounded-md  active:scale-95 transition-all duration-95 `}
+                  >
+                    Add Quize
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
-        <button className=" mt-5 w-full px-4 py-3 rounded-md bg-blue-700 text-white hover:bg-blue-500 active:bg-blue-400 active:scale-95 transition-all duration-95 ">
-          Submit All Quizes
-        </button>
+
+        <div className=" hidden lg:flex items-center flex-col justify-between ">
+          <div className="h-full w-[2px] bg-gray-200  "></div>
+          <span>or</span>
+          <div className="h-full w-[2px] bg-gray-200  "></div>
+        </div>
+
+        {/* quizes displaying section */}
+        <div className="w-full">
+          <QuizesDisplaying />
+        </div>
       </div>
 
       {/* react toastify section */}
