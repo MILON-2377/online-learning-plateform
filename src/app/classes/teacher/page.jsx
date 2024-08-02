@@ -5,6 +5,7 @@ import ActionButtons from "@/components/Classes/Teacher/ActionButtons";
 import Loading from "@/components/Loading/Loading";
 import Pagination from "@/components/pagination/Pagination";
 import useClassesDataLoading from "@/dataFatching/ClassesData";
+import QuizeId from "@/Hooks/useQuizeId";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -88,6 +89,11 @@ export default function TeacherClasses() {
     e.target.reset();
   };
 
+
+  // handle quize id 
+  const quizeIdHandle = (id) => {
+    QuizeId(id);
+  }
 
   // loading handle
   if (isLoading) return <Loading></Loading>;
@@ -190,6 +196,7 @@ export default function TeacherClasses() {
 
               <div className="card-actions justify-end">
                 <Link
+                onClick={() => quizeIdHandle(item._id) }
                 href='/classes/teacher/add-quize'
                   className="flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >

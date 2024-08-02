@@ -1,22 +1,39 @@
 "use client";
 
-import { editQuize, removeQuize } from "@/redux/reduxReducer/AddQuizes/addQuizeSlice";
+import QuizeId from "@/Hooks/useQuizeId";
+import {
+  editQuize,
+  removeQuize,
+  resetQuize,
+} from "@/redux/reduxReducer/AddQuizes/addQuizeSlice";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 export default function QuizesDisplaying() {
   const totalQuizes = useSelector((state) => state.quizes);
+  const subject = useSelector(state => state.subject);
   const [currentQuize, setCurrentQuize] = useState(1);
   const [quize, setQuize] = useState({});
   const dispatch = useDispatch();
   const [isEdit, setEdit] = useState(false);
   const { register, handleSubmit, reset } = useForm();
+  const [quizeOptions, setQuizeOptions] = useState(["A", "B", "C", "D"]);
+  const [isConfirmReach, setConfirmReach] = useState(false);
+  const id = QuizeId();
+  const router = useRouter();
 
   // handle current displaying quize
-  const handleNext = (id) => {
+  const handleNext = () => {
     if (currentQuize === totalQuizes.length) {
       return;
+    }
+
+    if (currentQuize === totalQuizes.length - 1) {
+      setConfirmReach(true);
     }
 
     const newCurrentQuize = currentQuize + 1;
@@ -31,6 +48,7 @@ export default function QuizesDisplaying() {
 
     const previousQuize = currentQuize - 1;
     setCurrentQuize(previousQuize);
+    setConfirmReach(false);
   };
 
   useEffect(() => {
@@ -45,10 +63,29 @@ export default function QuizesDisplaying() {
 
   //   handle edit quize
   const onSubmit = (data) => {
-    dispatch(editQuize({...data,id:quize.id}));
+    dispatch(editQuize({ ...data, id: quize.id }));
     setEdit(false);
   };
 
+  // handle data store to the database
+  const handleDataStore = async() => {
+    // console.log(totalQuizes);
+    try {
+      const res = await axios.post("/api/quize-create", {totalQuizes,id});
+      if(res.data.message){
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Quizzes have been saved successfully.',
+          confirmButtonText: 'OK'
+        });
+        router.push("/classes/teacher");
+        dispatch(resetQuize("success"));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="w-full p-5 ">
@@ -79,18 +116,7 @@ export default function QuizesDisplaying() {
         >
           Previous
         </button>
-        {/* <div className=" flex items-center gap-2 ">
-          {totalQuizes.map((item, index) => (
-            <button
-              key={index + 2}
-              className={` ${
-                currentQuize - 1 === index ? "bg-blue-500" : ""
-              } btn `}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div> */}
+       
         <button
           onClick={handleNext}
           className=" w-32 px-4 py-3 rounded-md border border-gray-200 bg-gray-100 hover:bg-gray-300 duration-200 "
@@ -119,9 +145,7 @@ export default function QuizesDisplaying() {
                     />
                   </label>
                   <div className=" flex items-center gap-5 ">
-                    <button  className="btn">
-                      Edit Confirm
-                    </button>
+                    <button className="btn">Edit Confirm</button>
                   </div>
                 </div>
                 <div className=" grid grid-cols-2 gap-5 ">
@@ -158,7 +182,9 @@ export default function QuizesDisplaying() {
                     />
                   </label>
                   <label className="flex flex-col gap-1 ">
-                    <span className="text-xl text-gray-600 font-semibold ">Correct Option</span>
+                    <span className="text-xl text-gray-600 font-semibold ">
+                      Correct Option
+                    </span>
                     <input
                       defaultValue={quize?.correctOption}
                       {...register("correctOption", { required: true })}
@@ -195,7 +221,9 @@ export default function QuizesDisplaying() {
                       key={index}
                       className=" flex items-center gap-1 px-4 py-3 hover:bg-gray-200 rounded-md "
                     >
-                      <span className="text-xl font-bold text-sky-800 ">A)</span>
+                      <span className="text-xl font-bold text-sky-800 uppercase ">
+                        {quizeOptions[index]})
+                      </span>
                       <p className=" text-blue-500 ">{item}</p>
                     </button>
                   ))}
@@ -209,11 +237,16 @@ export default function QuizesDisplaying() {
       </div>
 
       {/* submit button */}
-      {/* <div>
-        <button className=" mt-5 w-full px-4 py-3 rounded-md bg-blue-700 text-white hover:bg-blue-500 active:bg-blue-400 active:scale-95 transition-all duration-95 ">
+      <div>
+        <button
+          onClick={handleDataStore}
+          disabled={!isConfirmReach}
+          className={` mt-5 w-full px-4 py-3 rounded-md ${isConfirmReach ? "bg-blue-600 hover:bg-blue-500 active:bg-blue-400 transition-all duration-95 active:scale-95 text-white " : "border border-gray-200 text-black font-bold "}     `}
+        >
           Submit Quizes
         </button>
-      </div> */}
+      </div>
     </div>
   );
 }
+

@@ -1,7 +1,7 @@
 "use client";
 
 import QuizesDisplaying from "@/components/Classes/Teacher/QuizesDisplaying";
-import { addQuize } from "@/redux/reduxReducer/AddQuizes/addQuizeSlice";
+import { addQuize, resetQuize } from "@/redux/reduxReducer/AddQuizes/addQuizeSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,8 +19,8 @@ export default function AddQuizes() {
   const [allQuizes, setAllQuizes] = useState([]);
   const [quizeNumber, setQuizeNumber] = useState(0);
   const dispatch = useDispatch();
-  const quizes = useSelector((state) => state.quizes);
   const quizeSubject = useSelector((state) => state.subject);
+
 
   // handle add quize
   const handleAddQuize = (e) => {
@@ -65,9 +65,6 @@ export default function AddQuizes() {
     e.target.reset();
   };
 
-  // handle previous view quize
-  const handlePreviousQuizeView = () => {};
-
   //toastify handle
   useEffect(() => {
     const notify = () => {
@@ -81,7 +78,7 @@ export default function AddQuizes() {
 
   return (
     <div className="p-10  ">
-      <div className=" w-full flex  md:flex-col lg:flex-row lg:justify-between gap-10 ">
+      <div className=" w-full flex  sm:flex-col lg:flex-row lg:justify-between gap-10 ">
         <div className="w-full p-5 ">
           <div className="w-full  ">
             <h1 className="text-3xl font-bold text-gray-600 text-center ">
@@ -100,8 +97,12 @@ export default function AddQuizes() {
                     Subject
                   </span>
                   <select
-                    defaultValue=""
-                    onChange={(e) => setSubject(e.target.value)}
+                    value={quizeSubject.length > 0 ? `${quizeSubject}` : ""}
+                    onChange={(e) => {
+                      const selectedValue = e.target.value;
+                      setSubject(selectedValue);
+                    }}
+                    disabled={quizeSubject.length.length > 0}
                     className="select border border-gray-200 focus:outline-none w-full"
                   >
                     <option disabled value="">

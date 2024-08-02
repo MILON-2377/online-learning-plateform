@@ -9,6 +9,16 @@ export const quizeSlice = createSlice({
   name: "quize",
   initialState,
   reducers: {
+
+
+    // reset quize
+    resetQuize:(state, action) => {
+      state.quizes.length = 0;
+      state.subject = "";
+    },
+
+
+    // add quize
     addQuize: (state, action) => {
       const quize = {
         id: nanoid(),
@@ -45,5 +55,5 @@ export const quizeSlice = createSlice({
   },
 });
 
-export const { addQuize, removeQuize, editQuize } = quizeSlice.actions;
+export const { resetQuize, addQuize, removeQuize, editQuize } = quizeSlice.actions;
 export default quizeSlice.reducer;
