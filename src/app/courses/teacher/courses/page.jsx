@@ -1,11 +1,9 @@
 "use client";
 import { useAuth } from "@/AuthProvider/AuthProvider";
-import FilterAssignments from "@/components/assignments/FilterAssignments";
 import Loading from "@/components/Loading/Loading";
 import Pagination from "@/components/pagination/Pagination";
 import useCoursesDataLoading from "@/dataFatching/useCoursesDataLoading";
 import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
-import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
@@ -28,6 +26,7 @@ export default function CoursesPage() {
   const [totalCourses, setTotalCourses] = useState(0);
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState("");
 
   // handle pagination pages
   const router = useRouter();
@@ -38,7 +37,8 @@ export default function CoursesPage() {
   const { coursesData, refetch, isLoading } = useCoursesDataLoading(
     user?.email,
     page,
-    search
+    search,
+    filters
   );
 
   useEffect(() => {
@@ -50,16 +50,11 @@ export default function CoursesPage() {
 
   useEffect(() => {
     refetch();
-  }, [page]);
+    console.log(filters);
+  }, [page, filters]);
 
   // total pages handle
   const totalPages = totalCourses ? Math.ceil(totalCourses / 10) : 2;
-
-  // filter handle section
-
-  const handleFilterChange = () => {
-    refetch();
-  };
 
   // handle search
   const searchHandle = (e) => {
@@ -109,7 +104,20 @@ export default function CoursesPage() {
         <div className="flex items-center gap-5">
           {/* filter section */}
           <div className="">
-            <FilterAssignments onFilterChange={handleFilterChange} />
+            <label>
+              <select
+                onChange={(e) => setFilters(e.target.value)}
+                className="select focus:outline-none text-xl text-gray-600 border border-gray-200 rounded-md  w-full "
+                defaultValue="Filters by"
+              >
+                <option disabled value="Filters by">
+                  Filters by
+                </option>
+                <option value="All">All</option>
+                <option>Course Fee Low to High</option>
+                <option>Course Fee High to Low</option>
+              </select>
+            </label>
           </div>
 
           {/* search bar */}
@@ -206,18 +214,16 @@ export default function CoursesPage() {
         </table>
       </div>
 
-
-
       {/* pagination for medium and small devices */}
       <div className=" lg:hidden p-5  bg-gray-100 fixed bottom-0 w-full flex items-center justify-center ">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => {
-              router.push(`/courses/teacher/courses?page=${page}`);
-            }}
-          />
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => {
+            router.push(`/courses/teacher/courses?page=${page}`);
+          }}
+        />
+      </div>
     </div>
   );
 }

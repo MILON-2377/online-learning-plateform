@@ -1,20 +1,19 @@
 "use client";
 
 import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
-import FiltersItemsCatch from "@/Hooks/useFiltersItemsCatch";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useCoursesDataLoading(email,page,search) {
+export default function useCoursesDataLoading(email,page,search,filters) {
   const dataFatching = async () => {
-    const filters = FiltersItemsCatch();
-    const queryString = `filters=${encodeURIComponent(
-      JSON.stringify(filters)
-    )}`;
+    // const filters = FiltersItemsCatch();
+    // const queryString = `filters=${encodeURIComponent(
+    //   JSON.stringify(filters)
+    // )}`;
 
     const limit = 10;
     try {
       const res = await axiosSecureApi.get(
-        `/course-create?email=${email}&page=${page}&limit=${limit}&${queryString}&search=${search}`
+        `/course-create?email=${email}&page=${page}&limit=${limit}&search=${search}&filters=${filters}`
       );
 
       return res.data;
