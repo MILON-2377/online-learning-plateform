@@ -4,6 +4,7 @@ import FilterAssignments from "@/components/assignments/FilterAssignments";
 import Loading from "@/components/Loading/Loading";
 import Pagination from "@/components/pagination/Pagination";
 import useCoursesDataLoading from "@/dataFatching/useCoursesDataLoading";
+import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -67,7 +68,7 @@ export default function CoursesPage() {
   };
 
   // handle delete assignemtns
-  const handleDeleteAssignments = (id) => {
+  const handleDeleteCourse = (id) => {
     try {
       Swal.fire({
         title: "Are you sure?",
@@ -79,9 +80,7 @@ export default function CoursesPage() {
         confirmButtonText: "Yes, delete it!",
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const deleteRes = await axios.delete(
-            `/api/create-assignments?id=${id}`
-          );
+          const deleteRes = await axiosSecureApi.delete(`/course-create/${id}`);
 
           if (deleteRes.data) {
             refetch();
@@ -98,13 +97,6 @@ export default function CoursesPage() {
       console.log(error);
     }
   };
-
-  // assignemnt edit handle
-  //   const assignmentEdit = (id) => {
-  //     router.push(`/assignments/teacher/create/${id}`);
-  //   };
-
-  //   console.log(courses);
 
   // loading handle
   if (isLoading) return <Loading />;
@@ -151,34 +143,28 @@ export default function CoursesPage() {
       </div>
 
       {/* displaying the assignments */}
-      <div className="overflow-x-auto lg:ml-16 mb-10 mt-10 ">
+      <div className="overflow-x-auto lg:ml-16 mb-10 mt-5 ">
         <table className="table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Course Category</th>
-              <th>Course Level</th>
-              <th>Course Fee</th>
-              <th>
-                <span>
-                  <FaEye className="text-xl text-green-600 " />
-                </span>
-              </th>
-              <th>
-                <span>
-                  <FaEdit className="text-xl text-yellow-500 " />
-                </span>
-              </th>
-              <th className="text-red-500">Action</th>
+              <th className="text-[18px]">Title</th>
+              <th className="text-[18px]">Course Category</th>
+              <th className="text-[18px]">Course Level</th>
+              <th className="text-[18px]">Course Fee</th>
+
+              <th className="text-red-500 text-[18px] ">Action</th>
             </tr>
           </thead>
           <tbody>
             {courses?.map((item) => (
-              <tr key={item._id}>
+              <tr
+                key={item._id}
+                className=" hover:bg-gray-100 hover:text-blue-500 duration-200 transition-all "
+              >
                 <th>{item.title}</th>
                 <td>{item?.courseCategory}</td>
                 <td>{item?.courseLevel}</td>
-                <td>${item?.courseFee}</td>
+                <td className="text-blue-800">${item?.courseFee}</td>
                 <td>
                   <a
                     href={`/courses/teacher/courses/${item?._id}`}
@@ -195,7 +181,10 @@ export default function CoursesPage() {
                   </button>
                 </td>
                 <td>
-                  <button className="bg-red-500 text-white p-2 rounded flex items-center">
+                  <button
+                    onClick={() => handleDeleteCourse(item._id)}
+                    className="bg-red-500 text-white p-2 rounded flex items-center"
+                  >
                     <FaTrash className="mr-2" />
                     Delete
                   </button>
