@@ -107,7 +107,10 @@ export default function CoursesPage() {
       <div className="flex items-center justify-between  px-7 py-5 border-b-gray-200 border-b ">
         {/* filter search and sorting section */}
         <div className="flex items-center gap-5">
-          <FilterAssignments onFilterChange={handleFilterChange} />
+          {/* filter section */}
+          <div className="">
+            <FilterAssignments onFilterChange={handleFilterChange} />
+          </div>
 
           {/* search bar */}
           <form onSubmit={searchHandle} className="">
@@ -126,24 +129,32 @@ export default function CoursesPage() {
                 <IoSearch className="text-xl text-gray-400" />
               </span>
             </label>
-            <button className="px-4 py-[10.5px] rounded-l-none text-white  bg-blue-500  hover:bg-blue-700 rounded-md  active:bg-blue-400 ">
+            <button
+              className={`px-4 py-[10.5px] rounded-l-none text-white ${
+                search.length > 0
+                  ? "bg-blue-500 transition-all delay-200 "
+                  : " bg-gray-200 "
+              }  hover:bg-blue-700 rounded-md  active:bg-blue-400 `}
+            >
               Search
             </button>
           </form>
         </div>
 
         {/* pagination section */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => {
-            router.push(`/courses/teacher/courses?page=${page}`);
-          }}
-        />
+        <div className=" sm:hidden lg:block ">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => {
+              router.push(`/courses/teacher/courses?page=${page}`);
+            }}
+          />
+        </div>
       </div>
 
       {/* displaying the assignments */}
-      <div className="overflow-x-auto lg:ml-16 mb-10 mt-5 ">
+      <div className="overflow-x-auto px-10 mb-12 py-7 lg:ml-16 lg:mb-10 lg:mt-5 ">
         <table className="table">
           <thead>
             <tr>
@@ -194,6 +205,19 @@ export default function CoursesPage() {
           </tbody>
         </table>
       </div>
+
+
+
+      {/* pagination for medium and small devices */}
+      <div className=" lg:hidden p-5  bg-gray-100 fixed bottom-0 w-full flex items-center justify-center ">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => {
+              router.push(`/courses/teacher/courses?page=${page}`);
+            }}
+          />
+        </div>
     </div>
   );
 }

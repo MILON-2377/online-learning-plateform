@@ -18,34 +18,20 @@ export async function GET(req) {
     const search = searchParams.get("search");
     const parseFilters = filters ? JSON.parse(decodeURIComponent(filters)) : {};
 
-    console.log(teacherId);
 
     const skip = (page - 1) * limit;
-    let filter = {teacherId};
+    let filter = {};
+
+    // apply teacherId filter
+    if(teacherId){
+      filter.teacherId = teacherId;
+    }
+    
 
     if (search) {
-      filter.$or = [
-        { title: { $regex: new RegExp(search, "i") } },
-        { subject: { $regex: new RegExp(search, "i") } },
-      ];
-
-      if (isDate(search)) {
-        filter.dueDate = new Date(search);
-      }
+      filter['$text'] = {$search:search};
     }
 
-    // if (parseFilters.subject) {
-    //   filter.subject = { $regex: new RegExp(parseFilters.subject, "i") };
-    // }
-    // if (parseFilters.dueDate) {
-    //   filter.dueDate = { $regex: new RegExp(parseFilters.dueDate, "i") };
-    // }
-    // if (parseFilters.status) {
-    //   filter.status = { $regex: new RegExp(parseFilters.status, "i") };
-    // }
-    // if (parseFilters.submitted) {
-    //   filter.submitted = { $regex: new RegExp(parseFilters.submitted, "i") };
-    // }
 
     // console.log(filter);
     const total = await Course.countDocuments();

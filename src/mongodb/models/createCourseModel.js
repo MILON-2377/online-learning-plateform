@@ -35,6 +35,14 @@ const courseSchema = new mongoose.Schema({
   },
 });
 
+courseSchema.index({
+  title: "text",
+  description: "text",
+  courseCategory: "text",
+  courseLevel: "text",
+  courseFee: "text", 
+});
 
-const Course = mongoose.models.courses || mongoose.model("courses", courseSchema);
+const Course =
+  mongoose.models.courses || mongoose.model("courses", courseSchema);
 export default Course;

@@ -23,7 +23,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         Previous
       </button>
 
-      {pageNumbers.map((page, index) => (
+      {pageNumbers.slice(0,2).map((page, index) => (
         <button
           key={index}
           onClick={() => handlePageChange(page)}
