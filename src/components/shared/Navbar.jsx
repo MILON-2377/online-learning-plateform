@@ -4,7 +4,7 @@ import { useAuth } from "@/AuthProvider/AuthProvider";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   // const { user } = useAuth();
@@ -15,100 +15,98 @@ export default function Navbar() {
   // console.log(user);
 
   return (
-    <div className="w-full z-20 ">
-      <div
-        className={`navbar w-full border-b-gray-200 ${
-          path === "/assignments/teacher/all" || path === "/classes/teacher" ? "border-b-0" : " border-b  "
-        } `}
-      >
-        <div className=" navbar-start lg:hidden ">
-          {/* dropdown drawer for md device section */}
-          <div className="dropdown lg:hidden mr-5 sm:mr-0 ">
-            <div className="drawer">
-              <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-              <div className="drawer-content">
-                {/* Page content here */}
-                <label htmlFor="my-drawer" className="cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 sm:h-8 sm:w-8 mr-5 sm:mr-0 "
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+    <div
+      className={`navbar w-full border-b-gray-200 ${
+        path === "/assignments/teacher/all" || path === "/classes/teacher"
+          ? "border-b-0"
+          : " border-b  "
+      } `}
+    >
+      <div className=" navbar-start lg:hidden ">
+        {/* dropdown drawer for md device section */}
+        <div className="dropdown lg:hidden mr-5 sm:mr-0 ">
+          <div className="drawer">
+            <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content">
+              {/* Page content here */}
+              <label htmlFor="my-drawer" className="cursor-pointer">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 sm:h-8 sm:w-8 mr-5 sm:mr-0 "
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h8m-8 6h16"
+                  />
+                </svg>
+              </label>
+            </div>
+            <div className="drawer-side z-50">
+              <label
+                htmlFor="my-drawer"
+                aria-label="close sidebar"
+                className="drawer-overlay"
+              ></label>
+              <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                {/* Sidebar content here */}
+                {navbarLinks?.map((item, index) => (
+                  <NavbarLinks
+                    key={index}
+                    href={item.path}
+                    isActive={path === item.path}
+                    pathNam={path}
+                    nestedLinks={item.nestedLinks}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 6h16M4 12h8m-8 6h16"
-                    />
-                  </svg>
-                </label>
-              </div>
-              <div className="drawer-side">
-                <label
-                  htmlFor="my-drawer"
-                  aria-label="close sidebar"
-                  className="drawer-overlay"
-                ></label>
-                <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-                  {/* Sidebar content here */}
-                  {navbarLinks?.map((item, index) => (
-                    <NavbarLinks
-                      key={index}
-                      href={item.path}
-                      isActive={path === item.path}
-                      pathNam={path}
-                      nestedLinks={item.nestedLinks}
-                    >
-                      {item.title}
-                    </NavbarLinks>
-                  ))}
-                </ul>
-              </div>
+                    {item.title}
+                  </NavbarLinks>
+                ))}
+              </ul>
             </div>
           </div>
-          <a href="/" className=" lg:hidden ml-4 text-3xl font-bold ">
+        </div>
+        <a href="/" className=" lg:hidden ml-4 text-3xl font-bold ">
+          EduConnect
+        </a>
+      </div>
+
+      {/* navbar links section for lg device */}
+      <div className=" hidden lg:w-[70%] lg:flex items-center gap-5 p-5 ">
+        <div>
+          <a
+            href="/"
+            className=" md:hidden lg:flex items-center justify-center text-3xl font-bold "
+          >
             EduConnect
           </a>
         </div>
-
-        {/* navbar links section for lg device */}
-        <div className=" hidden lg:flex items-center gap-5 p-5 ">
-          <div>
-            <a
-              href="/"
-              className=" md:hidden lg:flex items-center justify-center text-3xl font-bold "
+        <div className=" w-full  flex items-center gap-2 ">
+          {navbarLinks?.map((item, index) => (
+            <NavbarLinks
+              key={index}
+              href={item.path}
+              isActive={path === item.path}
+              pathNam={path}
+              nestedLinks={item.nestedLinks}
             >
-              EduConnect
-            </a>
-          </div>
-          <div className=" flex items-center gap-2 ">
-            {navbarLinks?.map((item, index) => (
-              <NavbarLinks
-                key={index}
-                href={item.path}
-                isActive={path === item.path}
-                pathNam={path}
-                nestedLinks={item.nestedLinks}
-              >
-                {item.title}
-              </NavbarLinks>
-            ))}
-          </div>
+              {item.title}
+            </NavbarLinks>
+          ))}
         </div>
+      </div>
 
-        <div className="navbar-end">
-          {
-            
-          }
-          <a
-            href="/login"
-            className="px-4 py-1 rounded-full bg-blue-700 text-white hover:bg-blue-500 "
-          >
-            LogIn
-          </a>
-        </div>
+      <div className="navbar-end">
+        {}
+        <a
+          href="/login"
+          className="px-4 py-1 rounded-full bg-blue-700 text-white hover:bg-blue-500 "
+        >
+          LogIn
+        </a>
       </div>
     </div>
   );
@@ -117,6 +115,19 @@ export default function Navbar() {
 // navbarLink component with animation
 const NavbarLinks = ({ href, isActive, children, nestedLinks, pathNam }) => {
   const [isOpen, setOpen] = useState(false);
+
+  useEffect(() => {
+    const nestedLinksHanldeClose = (e) => {
+      if (e.target) {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener("click", nestedLinksHanldeClose);
+
+    () => window.removeEventListener("click", nestedLinksHanldeClose);
+  }, []);
+
   return (
     <div className="relative" onMouseEnter={() => setOpen(true)}>
       <motion.div
@@ -173,6 +184,10 @@ function NavbarTitlesHandle(user) {
 // students navbar links
 const studentsNavLinks = [
   {
+    title: "Classes",
+    path: "/classes",
+  },
+  {
     title: "Courses",
     path: "/courses",
   },
@@ -180,10 +195,7 @@ const studentsNavLinks = [
     title: "Assignments",
     path: "/assignments",
   },
-  {
-    title: "My Classes",
-    path: "/my-classes",
-  },
+
   {
     title: "grades",
     path: "/grades",
@@ -201,16 +213,12 @@ const teacherNavtitles = [
     path: "/classes/teacher",
   },
   {
-    title: "Assignments",
-    path: "/assignments/teacher",
-    nestedLinks: [
-      { title: "All Assignments", path: "/assignments/teacher/all" },
-      { title: "Create Assignments", path: "/assignments/teacher/create" },
-    ],
+    title: "All Courses",
+    path: "/courses/teacher/courses",
   },
   {
-    title: "Grades",
-    path: "/grades",
+    title: "Create Course",
+    path: "/courses/teacher/create-course",
   },
   {
     title: "Students",

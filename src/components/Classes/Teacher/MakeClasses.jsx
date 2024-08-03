@@ -37,7 +37,7 @@ export default function MakeClasses() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center ">
-      <h1 className="text-4xl text-gray-600 font-bold mt-20 ">Create class</h1>
+      <h1 className="text-4xl text-gray-600 font-bold mt-20 ">Create class video</h1>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex gap-5 p-10 lg:w-[40%] mt-5 border-t border-t-gray-200 "

@@ -1,7 +1,7 @@
 "use client";
 
 import auth from "@/Firebase.Config/firebase.config";
-import axios from "axios";
+import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -34,11 +34,11 @@ export default function AuthProvider({ children }) {
         const { email, userName } = currentUser;
         try {
           // console.log(email);
-          const resUser = await axios.get(
-            `/api/createUser?email=${email}`
+          const resUser = await axiosSecureApi.get(
+            `/createUser?email=${email}`
           );
           setUser(resUser.data.user);
-          // console.log(resUser.data.user);
+          console.log(resUser.data.user);
         } catch (error) {
           console.log(error);
         }

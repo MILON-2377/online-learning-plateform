@@ -108,7 +108,7 @@ export default function TeacherClasses() {
             onClick={() => router.push(`/classes/teacher/makeClass`)}
             className=" px-4 py-2 rounded-md bg-blue-700 text-white hover:bg-blue-500 active:scale-95 active:bg-blue-300 transition-all duration-300 "
           >
-            create Class
+            Add New Class Video
           </button>
           <button
             onClick={() => router.push(`/classes/teacher/makeClass`)}
