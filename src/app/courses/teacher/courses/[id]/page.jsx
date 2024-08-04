@@ -2,17 +2,20 @@
 
 import { useAuth } from "@/AuthProvider/AuthProvider";
 import Loading from "@/components/Loading/Loading";
-import fetchSingleData from "@/dataFatching/useSignleDataLoading";
 import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
-import Image from "next/image";
-import { useParams } from "next/navigation";
+import QuizeId from "@/Hooks/useQuizeId";
+import { quizeIdAdd } from "@/redux/reduxReducer/AddQuizes/addQuizeSlice";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function ViewCourse() {
   const { user } = useAuth();
   const { id } = useParams();
   const [course, setCourse] = useState([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
   // data loading
   useEffect(() => {
@@ -29,7 +32,6 @@ export default function ViewCourse() {
     fetchData();
   }, [id]);
 
-  console.log(course);
 
   if (loading) return <Loading />;
 
@@ -81,6 +83,18 @@ export default function ViewCourse() {
         </article>
         <div>
           <div className="divider"></div>
+
+          {/* actions buttons */}
+          <div className="flex items-center justify-between mb-8 ">
+            <button 
+            onClick={() => {
+              dispatch(quizeIdAdd(course._id));
+              router.push('/courses/teacher/courses/add-quize');
+            }}
+            className="btn">Add Quize</button>
+            <button className="btn">Add new videos</button>
+          </div>
+
           <div className="space-y-2">
             <h4 className="text-lg font-semibold">Students Comments</h4>
             <div>

@@ -3,7 +3,7 @@
 import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
 import { useQuery } from "@tanstack/react-query";
 
-export default function useCoursesDataLoading(email,page,search,filters) {
+export default function useCoursesDataLoading(email,page,search,sort) {
   const dataFatching = async () => {
     // const filters = FiltersItemsCatch();
     // const queryString = `filters=${encodeURIComponent(
@@ -13,7 +13,7 @@ export default function useCoursesDataLoading(email,page,search,filters) {
     const limit = 10;
     try {
       const res = await axiosSecureApi.get(
-        `/course-create?email=${email}&page=${page}&limit=${limit}&search=${search}&filters=${filters}`
+        `/course-create?email=${email}&page=${page}&limit=${limit}&search=${search}&sort=${sort}`
       );
 
       return res.data;

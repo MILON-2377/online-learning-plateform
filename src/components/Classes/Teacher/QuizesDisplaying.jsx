@@ -1,6 +1,5 @@
 "use client";
 
-import QuizeId from "@/Hooks/useQuizeId";
 import {
   editQuize,
   removeQuize,
@@ -15,7 +14,7 @@ import Swal from "sweetalert2";
 
 export default function QuizesDisplaying() {
   const totalQuizes = useSelector((state) => state.quizes);
-  const subject = useSelector(state => state.subject);
+  const quizeId = useSelector((state) => state.quizeId);
   const [currentQuize, setCurrentQuize] = useState(1);
   const [quize, setQuize] = useState({});
   const dispatch = useDispatch();
@@ -23,7 +22,6 @@ export default function QuizesDisplaying() {
   const { register, handleSubmit, reset } = useForm();
   const [quizeOptions, setQuizeOptions] = useState(["A", "B", "C", "D"]);
   const [isConfirmReach, setConfirmReach] = useState(false);
-  const id = QuizeId();
   const router = useRouter();
 
   // handle current displaying quize
@@ -68,18 +66,20 @@ export default function QuizesDisplaying() {
   };
 
   // handle data store to the database
-  const handleDataStore = async() => {
-    // console.log(totalQuizes);
+  const handleDataStore = async () => {
     try {
-      const res = await axios.post("/api/quize-create", {totalQuizes,id});
-      if(res.data.message){
+      const res = await axios.post("/api/quize-create", {
+        totalQuizes,
+        id:quizeId,
+      });
+      if (res.data.message) {
         Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Quizzes have been saved successfully.',
-          confirmButtonText: 'OK'
+          icon: "success",
+          title: "Success!",
+          text: "Quizzes have been saved successfully.",
+          confirmButtonText: "OK",
         });
-        router.push("/classes/teacher");
+        router.push("/courses/teacher/courses");
         dispatch(resetQuize("success"));
       }
     } catch (error) {
@@ -116,7 +116,7 @@ export default function QuizesDisplaying() {
         >
           Previous
         </button>
-       
+
         <button
           onClick={handleNext}
           className=" w-32 px-4 py-3 rounded-md border border-gray-200 bg-gray-100 hover:bg-gray-300 duration-200 "
@@ -241,7 +241,11 @@ export default function QuizesDisplaying() {
         <button
           onClick={handleDataStore}
           disabled={!isConfirmReach}
-          className={` mt-5 w-full px-4 py-3 rounded-md ${isConfirmReach ? "bg-blue-600 hover:bg-blue-500 active:bg-blue-400 transition-all duration-95 active:scale-95 text-white " : "border border-gray-200 text-black font-bold "}     `}
+          className={` mt-5 w-full px-4 py-3 rounded-md ${
+            isConfirmReach
+              ? "bg-blue-600 hover:bg-blue-500 active:bg-blue-400 transition-all duration-95 active:scale-95 text-white "
+              : "border border-gray-200 text-black font-bold "
+          }     `}
         >
           Submit Quizes
         </button>
@@ -249,4 +253,3 @@ export default function QuizesDisplaying() {
     </div>
   );
 }
-

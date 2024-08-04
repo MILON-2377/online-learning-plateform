@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import learning1 from "../../../public/learning1.jpg";
 import learning2 from "../../../public/learning4.jpg";
 import Image from "next/image";
 

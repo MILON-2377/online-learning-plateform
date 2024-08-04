@@ -13,7 +13,7 @@ export async function GET(req) {
     const teacherId = searchParams.get("email");
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
-    const filters = searchParams.get("filters");
+    const sorts = searchParams.get("sort");
     const search = searchParams.get("search");
     // const parseFilters = filters ? JSON.parse(decodeURIComponent(filters)) : {};
 
@@ -31,8 +31,8 @@ export async function GET(req) {
     }
 
     // sorting apply
-    if (filters) {
-      if (filters === "Course Fee Low to High") {
+    if (sorts) {
+      if (sorts === "Course Fee Low to High") {
         sort.courseFee = 1;
       } else {
         sort.courseFee = -1;

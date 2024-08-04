@@ -1,66 +1,54 @@
 "use client";
 
 import { useAuth } from "@/AuthProvider/AuthProvider";
+import Loading from "@/components/Loading/Loading";
 import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
+import QuizeId from "@/Hooks/useQuizeId";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 export default function CreateCourse() {
   const { user } = useAuth();
-  const { register, handleSubmit, reset, watch } = useForm();
+  const id = QuizeId();
+  const { register, handleSubmit, reset } = useForm();
+  const [course, setCourse] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  // watch the file inputs
-  const videoUrl = watch("videoUrl");
-  const thumbnailUrl = watch("thumbnailUrl");
+  //   course data loading handle
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axiosSecureApi.get(`/course-create/${id}`);
+        setCourse(res.data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-
-    // append form fields
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("courseCategory", data.courseCategory);
-    formData.append("corseLevel", data.corseLevel);
-    formData.append("courseFee", data.courseFee);
-    formData.append("teacherId", user?.email);
-    formData.append("teacherName", user?.userName);
-
-    // append file
-    if (videoUrl && videoUrl.length > 0) {
-      formData.append("videoUrl", videoUrl[0]);
-    }
-
-    if (thumbnailUrl && thumbnailUrl.length > 0) {
-      formData.append("thumbnailUrl", thumbnailUrl[0]);
-    }
-
-    try {
-      const res = await axiosSecureApi.post("/course-create", { formData });
-      console.log(res.data);
-    } catch (error) {
-      console.log(error.message);
-    }
-
-    // try {
-    //   const res = await axios.post("/api/create-class", { ...data, teacherId:user.email, teacherName: user.userName });
-    //   if (res.data.saveClass) {
-    //     Swal.fire({
-    //       title: "Success!",
-    //       text: "Recorded class saved successfully",
-    //       icon: "success",
-    //       confirmButtonText: "OK",
-    //     });
-    //     reset();
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   Swal.fire({
-    //     title: "Error!",
-    //     text: "There was a problem saving the recorded class",
-    //     icon: "error",
-    //     confirmButtonText: "OK",
-    //   });
-    // }
+     try {
+        const res = await axiosSecureApi.put(`/course-create/${id}`, data);
+        if(res.data.updateCourse){
+          router.push("/courses/teacher/courses");
+          Swal.fire({
+            title: "Update Complete!",
+            text: "Your data has been successfully updated!",
+            icon: "success"
+          });
+        }
+     } catch (error) {
+        console.log(error.message);
+     }
   };
+
+  if (loading) return <Loading />;
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center ">
@@ -77,6 +65,7 @@ export default function CreateCourse() {
             <input
               className="px-4 py-2 rounded-md border border-gray-200 focus:outline-none "
               placeholder="Enter the title"
+              defaultValue={course?.title}
               {...register("title", { required: true })}
               type="text"
             />
@@ -90,6 +79,7 @@ export default function CreateCourse() {
               {...register("description", { required: true })}
               className="textarea textarea-bordered"
               placeholder="Enter the description"
+              defaultValue={course?.description}
             ></textarea>
           </div>
 
@@ -99,13 +89,10 @@ export default function CreateCourse() {
               Course Category
             </span>
             <select
-              defaultValue="Select course category"
+              defaultValue={course?.courseCategory}
               {...register("subject", { required: true })}
               className="select border border-gray-200 focus:outline-none w-full "
             >
-              <option disabled value="Select course category">
-                Select course category
-              </option>
               {courseCatergories?.map((item, index) => (
                 <option key={index + 1}>{item}</option>
               ))}
@@ -116,13 +103,10 @@ export default function CreateCourse() {
           <div className="flex gap-1 flex-col">
             <span className=" font-semibold text-gray-600 ">Course level</span>
             <select
-              defaultValue=""
+              defaultValue={course?.courseLevel}
               {...register("accessLevel", { required: true })}
               className="select border border-gray-200 focus:outline-none w-full "
             >
-              <option disabled value="">
-                Select course level
-              </option>
               <option>Beginer</option>
               <option>Intermediate</option>
               <option>Advanced</option>
@@ -133,34 +117,41 @@ export default function CreateCourse() {
         <div className="divider divider-horizontal ">or</div>
 
         <div className="flex flex-col gap-5">
-          {/* Scheduled date */}
           <div className="flex gap-1 flex-col">
             <span className=" font-semibold text-gray-600 ">Course fee</span>
             <input
-              className="px-4 py-2 rounded-md border border-gray-200 focus:outline-none "
-              placeholder="Enter course fee"
+              className="px-4 py-2 rounded-md border placeholder:text-black border-gray-200 focus:outline-none "
+              defaultValue={course?.courseFee}
               {...register("courseFee", { required: true })}
+              placeholder={course?.courseFee}
               type="number"
             />
           </div>
 
-          {/* video file uploading */}
+          {/* dicount fee */}
           <div className="flex flex-col gap-2">
-            <div className=" font-semibold text-gray-600 ">
-              Upload video file
-            </div>
+            <span className=" font-semibold text-gray-600 ">Discount</span>
             <input
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              id="file-upload"
-              {...register("videoUrl")}
-              type="file"
+              className="px-4 py-2 rounded-md border border-gray-200 focus:outline-none "
+              placeholder="Discount"
+              {...register("discount", { required: true })}
+              type="number"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className=" font-semibold text-gray-600 ">Discount code</span>
+            <input
+              className="px-4 py-2 rounded-md border border-gray-200 focus:outline-none "
+              placeholder="Discount code"
+              {...register("discountCode", { required: true })}
+              type="text"
             />
           </div>
 
           {/* Thumnail URL */}
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <div className=" font-semibold text-gray-600 ">
-              Upload thumbnail file
+              Upload thumbnail Picture
             </div>
             <input
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -168,7 +159,7 @@ export default function CreateCourse() {
               {...register("thumbnailUrl")}
               type="file"
             />
-          </div>
+          </div> */}
 
           <button className="btn w-full">Save</button>
         </div>

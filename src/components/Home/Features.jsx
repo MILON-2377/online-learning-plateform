@@ -1,95 +1,238 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Pagination from "../pagination/Pagination";
+import useTotalCoursesDataLoading from "@/dataFatching/useTotalCoursesDataLoading";
+import { useRouter, useSearchParams } from "next/navigation";
+import { FaSearch } from "react-icons/fa";
+import Image from "next/image";
 
-// Example features data
-const features = [
+// course categories
+const courseCategories = [
   {
-    id: 1,
-    title: "Course Management",
-    description: "Organize and deliver engaging courses with ease.",
-    icon: "📚", // Book with a checkmark
-    img: "", // Replace with actual image path
+    id: "1",
+    name: "Programming",
   },
   {
-    id: 2,
-    title: "Virtual Classrooms",
-    description: "Foster interactive learning through live sessions.",
-    icon: "📹", // Video call
-    img: "", // Replace with actual image path
+    id: "2",
+    name: "Web Development",
   },
   {
-    id: 3,
-    title: "Assessments and Analytics",
-    description: "Track progress and personalize learning paths.",
-    icon: "📊", // Bar chart
-    img: "", // Replace with actual image path
+    id: "3",
+    name: "Data Science",
   },
   {
-    id: 4,
-    title: "Resource Library",
-    description: "Access a vast collection of educational materials.",
-    icon: "📖", // Open book
-    img: "", // Replace with actual image path
+    id: "4",
+    name: "Marketing",
   },
   {
-    id: 5,
-    title: "Discussion Forums",
-    description: "Engage with peers and instructors in lively discussions.",
-    icon: "💬", // Speech bubble
-    img: "", // Replace with actual image path
+    id: "5",
+    name: "Design",
   },
   {
-    id: 6,
-    title: "Certification Programs",
-    description: "Earn certifications to showcase your achievements.",
-    icon: "🏆", // Trophy
-    img: "", // Replace with actual image path
+    id: "6",
+    name: "Business",
   },
   {
-    id: 7,
-    title: "Mobile Access",
-    description: "Learn on the go with our mobile-friendly platform.",
-    icon: "📱", // Mobile phone
-    img: "", // Replace with actual image path
+    id: "7",
+    name: "Finance",
   },
   {
-    id: 8,
-    title: "Customizable Dashboards",
-    description: "Personalize your dashboard to fit your learning needs.",
-    icon: "⚙️", // Gear
-    img: "", // Replace with actual image path
+    id: "8",
+    name: "Health & Fitness",
+  },
+  {
+    id: "9",
+    name: "Personal Development",
   },
 ];
 
 export default function Features() {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCourses, setTotalCourses] = useState(0);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
+  const [filters, setFilters] = useState("");
+
+  // handle pagination pages
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1", 10);
+
+  // handle data loading
+  const { coursesData, refetch, isLoading } = useTotalCoursesDataLoading(
+    page,
+    search,
+    sort,
+    filters
+  );
+
+  useEffect(() => {
+    setCourses(coursesData.coursesData);
+    setTotalCourses(coursesData.total);
+    setCurrentPage(page);
+  }, [coursesData, page]);
+
+  const totalPages = totalCourses ? Math.ceil(totalCourses / 10) : 2;
+
+  // data load pagination changes
+  useEffect(() => {
+    if (filters) {
+      setSearch("");
+    }
+
+    refetch();
+  }, [page, filters]);
+
+  // search handle
+  const searchHandle = (e) => {
+    e.preventDefault();
+    console.log(search);
+    refetch();
+    e.target.reset();
+  };
+
   return (
-    <div className="w-[95%] mx-auto lg:w-full p-5 bg-gray-200 bg-opacity-50">
-      <h1 className="text-3xl mb-5 font-bold">Features</h1>
-      <div className="grid lg:grid-cols-4 gap-5">
-        {features.map((item) => (
+    <div className="w-[95%] relative md:w-full mx-auto lg:w-full px-5 py-16  bg-orange-100 bg-opacity-10 ">
+      <h1 className="text-3xl mb-5 font-bold">Our courses</h1>
+
+      {/* all courses displaying header section */}
+      <div className="w-full flex items-center justify-between mb-10 ">
+        <select
+          onChange={(e) => setFilters(e.target.value)}
+          className="select w-full border bg-white border-gray-200 focus:outline-none max-w-xs"
+          defaultValue="Pick course"
+        >
+          <option disabled value="Pick course">
+            Pick course
+          </option>
+          {courseCategories?.map((item) => (
+            <option key={item.id}>{item.name}</option>
+          ))}
+        </select>
+
+        {/* search filed */}
+        <form onSubmit={searchHandle} className=" flex items-center ">
+          <label className="border relative border-gray-200 px-4 py-3 rounded-md rounded-r-none bg-white  ">
+            <input
+              onChange={(e) => setSearch(e.target.value)}
+              className="focus:outline-none border-none focus:border-none bg-transparent "
+              type="search"
+              placeholder="Search"
+            />
+            <span
+              className={
+                search.length > 0 ? "hidden" : "absolute top-4 right-3"
+              }
+            >
+              <FaSearch className={"text-xl text-gray-400  "} />
+            </span>
+          </label>
+          <button
+            className={` ${
+              search
+                ? "transition-all duration-200 bg-blue-600 text-white "
+                : ""
+            } px-4 py-3 border border-gray-200 rounded-md rounded-l-none border-l-0 `}
+          >
+            Search
+          </button>
+        </form>
+
+        {/* pagination */}
+        <div className=" sm:hidden lg:block ">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => {
+              router.push(`/?page=${page}`);
+            }}
+          />
+        </div>
+      </div>
+
+      {/* divider */}
+      <div className="divider mb-10"></div>
+
+      {/* displaying courses */}
+      <div className="grid lg:grid-cols-4 gap-5 mb-24 ">
+        {courses?.map((item) => (
           <motion.div
-            key={item.id}
-            className="h-[400px] bg-white"
+            key={item._id}
+            className="h-[400px] bg-white shadow-lg hover:scale-105 "
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }} // Trigger animation once, with 10% of the element in view
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
           >
             <div className="w-full h-[60%]">
               <img
                 className="w-full h-full object-cover"
-                src={item.img}
+                src={item.thumbnailUrl}
                 alt={item.title}
               />
             </div>
             <div className="p-5 flex flex-col gap-2">
-              <span className="text-3xl">{item.icon}</span>
-              <h1 className="text-xl text-gray-600">{item.title}</h1>
-              <p className="text-sm text-gray-600">{item.description}</p>
+              <div className="flex flex-col gap-2">
+                <h1 className="text-xl text-gray-600 font-semibold">
+                  {item.title}
+                </h1>
+                {/* <p className="text-sm text-gray-600">{item.description}</p> */}
+              </div>
+              <div>
+                <p>
+                  <span className="text-xl text-gray-600 font-bold">
+                    Price :
+                  </span>
+                  <span className="text-xl ml-3 text-yellow-600">
+                    ${item?.courseFee}
+                  </span>
+                </p>
+                {item?.discountFee ? (
+                  <>
+                    <p>
+                      <span className="text-xl text-gray-600 font-bold">
+                        Discount :
+                      </span>
+                      <span className="text-xl ml-3 text-yellow-600">
+                        ${item?.discountFee ? item?.discountFee : 0}
+                      </span>
+                    </p>
+                    <p>
+                      <span className="text-xl text-gray-600 font-bold">
+                        Total :
+                      </span>
+                      <span className="text-xl ml-3 text-yellow-600">
+                        ${item?.courseFee}
+                      </span>
+                    </p>
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+
+              <div>
+                <button className="bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all duration-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                  Enroll Now
+                </button>
+              </div>
             </div>
           </motion.div>
         ))}
+      </div>
+
+      {/* medium device pagination */}
+      <div className=" lg:hidden flex items-center justify-center p-10 bg-orange-50 absolute w-full bottom-0 mr-10 ">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => {
+            router.push(`/?page=${page}`);
+          }}
+        />
       </div>
     </div>
   );

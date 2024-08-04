@@ -4,6 +4,7 @@ import Loading from "@/components/Loading/Loading";
 import Pagination from "@/components/pagination/Pagination";
 import useCoursesDataLoading from "@/dataFatching/useCoursesDataLoading";
 import axiosSecureApi from "@/Hooks/ApiRelatedHooks/AxiosSecureApi";
+import QuizeId from "@/Hooks/useQuizeId";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
@@ -26,7 +27,7 @@ export default function CoursesPage() {
   const [totalCourses, setTotalCourses] = useState(0);
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
-  const [filters, setFilters] = useState("");
+  const [sort, setSort] = useState("");
 
   // handle pagination pages
   const router = useRouter();
@@ -38,20 +39,18 @@ export default function CoursesPage() {
     user?.email,
     page,
     search,
-    filters
+    sort
   );
 
   useEffect(() => {
     setCourses(coursesData.coursesData);
     setTotalCourses(coursesData.total);
     setCurrentPage(page);
-    // refetch();
   }, [coursesData, page]);
 
   useEffect(() => {
     refetch();
-    console.log(filters);
-  }, [page, filters]);
+  }, [page, sort]);
 
   // total pages handle
   const totalPages = totalCourses ? Math.ceil(totalCourses / 10) : 2;
@@ -106,12 +105,12 @@ export default function CoursesPage() {
           <div className="">
             <label>
               <select
-                onChange={(e) => setFilters(e.target.value)}
+                onChange={(e) => setSort(e.target.value)}
                 className="select focus:outline-none text-xl text-gray-600 border border-gray-200 rounded-md  w-full "
-                defaultValue="Filters by"
+                defaultValue="Courses sort by"
               >
-                <option disabled value="Filters by">
-                  Filters by
+                <option disabled value="Courses sort by">
+                  Courses sort by
                 </option>
                 <option value="All">All</option>
                 <option>Course Fee Low to High</option>
@@ -194,7 +193,15 @@ export default function CoursesPage() {
                   </a>
                 </td>
                 <td>
-                  <button className="bg-yellow-500 text-white p-2 rounded flex items-center">
+                  <button
+                    onClick={() => 
+                    {
+                      router.push(`/courses/teacher/edit-course`);
+                      QuizeId(item._id);
+                    }
+                    }
+                    className="bg-yellow-500 text-white p-2 rounded flex items-center"
+                  >
                     <FaEdit className="mr-2" />
                     Edit
                   </button>

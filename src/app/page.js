@@ -7,8 +7,10 @@ import Footer from "@/components/Home/Footer";
 import OurStudentsSay from "@/components/Home/OutStudentsSay";
 
 export default function Home() {
+  const user = {profession: "Student"};
+
   return (
-    <main className=" flex flex-col gap-[300px] bg-white ">
+    <main className=" flex flex-col gap-[100px] bg-white ">
       {/* banner section */}
       <Banner />
 
@@ -21,7 +23,7 @@ export default function Home() {
       <Benefits />
 
       {/* Call to action section */}
-      {/* <CallToAction /> */}
+      <CallToAction />
 
       {/* our studens says section */}
       <OurStudentsSay />

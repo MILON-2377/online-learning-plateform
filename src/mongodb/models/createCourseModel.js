@@ -33,7 +33,7 @@ const courseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-});
+}, {strict:false});
 
 courseSchema.index({
   title: "text",

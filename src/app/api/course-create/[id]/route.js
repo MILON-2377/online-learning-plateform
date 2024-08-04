@@ -1,42 +1,80 @@
+import connect from "@/mongodb";
 import Course from "@/mongodb/models/createCourseModel";
 import { NextResponse } from "next/server";
 
-export async function GET(req){
-    const { pathname } = new URL(req.url);
-    const id = pathname.split("/").pop();
+// mongodb connection
+connect();
 
-    // console.log(id);
+export async function GET(req) {
+  const { pathname } = new URL(req.url);
+  const id = pathname.split("/").pop();
 
-    try {
-        const courseData = await Course.findById({_id:id});
+  // console.log(id);
 
-        if(!courseData){
-            return NextResponse.json({message:"there is no data found"});
-        }
+  try {
+    const courseData = await Course.findById({ _id: id });
 
-        return NextResponse.json(courseData);
-    } catch (error) {
-        console.log(error.message);
-        return NextResponse.json({message:error.message});
+    if (!courseData) {
+      return NextResponse.json({ message: "there is no data found" });
     }
-};
 
+    return NextResponse.json(courseData);
+  } catch (error) {
+    console.log(error.message);
+    return NextResponse.json({ message: error.message });
+  }
+}
 
 // delete course api
 export async function DELETE(req) {
-    const {pathname} = new URL(req.url);
+  const { pathname } = new URL(req.url);
+  const id = pathname.split("/").pop();
+
+  try {
+    const deleteCourse = await Course.findByIdAndDelete({ _id: id });
+
+    if (!deleteCourse) {
+      return NextResponse.json({ message: "course does not deleted" });
+    }
+
+    return NextResponse.json({
+      message: "course delete success",
+      deleteCourse,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return NextResponse.json({ message: error.message });
+  }
+}
+
+// update course
+export async function PUT(req) {
+  try {
+    const reqBody = await req.json();
+    const { pathname } = new URL(req.url);
     const id = pathname.split("/").pop();
 
-    try {
-        const deleteCourse = await Course.findByIdAndDelete({_id:id});
+    const filter = { _id: id };
 
-        if(!deleteCourse){
-            return NextResponse.json({message:"course does not deleted"});
-        }
-
-        return NextResponse.json({message:"course delete success", deleteCourse});
-    } catch (error) {
-        console.log(error.message);
-        return NextResponse.json({message:error.message});
+    const updateData = {
+      $set: reqBody,
     }
+
+    const updateCourse = await Course.findOneAndUpdate(filter, updateData, {
+      new: true,
+      upsert: true,
+    });
+
+    if (!updateCourse) {
+      return NextResponse.json(
+        { message: "Course not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ message: "success", updateCourse });
+  } catch (error) {
+    console.log(error.message);
+    return NextResponse.json({ message: error.message });
+  }
 }

@@ -2,6 +2,7 @@ import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = {
   subject: "",
+  quizeId:"",
   quizes: [],
 };
 
@@ -52,8 +53,13 @@ export const quizeSlice = createSlice({
         }
       });
     },
+
+    // quize id 
+    quizeIdAdd: (state, action) => {
+      state.quizeId = action.payload;
+    },
   },
 });
 
-export const { resetQuize, addQuize, removeQuize, editQuize } = quizeSlice.actions;
+export const { resetQuize, addQuize, removeQuize, editQuize, quizeIdAdd } = quizeSlice.actions;
 export default quizeSlice.reducer;

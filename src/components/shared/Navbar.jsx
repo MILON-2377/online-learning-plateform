@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 export default function Navbar() {
   // const { user } = useAuth();
-  const user = { profession: "Teacher" };
+  const user = { profession: "Student" };
   const navbarLinks = NavbarTitlesHandle(user);
   const router = useRouter();
   const path = usePathname();
