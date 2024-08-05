@@ -12,9 +12,11 @@ export async function GET(req) {
     const page = searchParams.get("page");
     const search = searchParams.get("search");
     const filters = searchParams.get("filters");
+    const sorts = searchParams.get("sort");
 
     const skip = (page - 1) * limit;
-    let filter = {};
+    const filter = {};
+    const sort = {};
 
     if (search) {
       filter["$text"] = { $search: search };
@@ -24,10 +26,20 @@ export async function GET(req) {
       filter.courseCategory = { $regex: new RegExp(filters, "i") };
     }
 
+    if (sorts) {
+      if (sorts === "Low to high") {
+        sort.courseFee = 1;
+      } else {
+        sort.courseFee = -1;
+      }
+    }
 
-    const total = await Course.countDocuments(filter);
+    const total = await Course.countDocuments();
 
-    const coursesData = await Course.find(filter).skip(skip).limit(limit);
+    const coursesData = await Course.find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
 
     return NextResponse.json({ total, coursesData });
   } catch (error) {

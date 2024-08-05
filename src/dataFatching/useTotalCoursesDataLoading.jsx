@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function useTotalCoursesDataLoading(page,search,sort,filters) {
   const dataFatching = async () => {
 
-    const limit = 10;
+    const limit = 12;
     try {
       const res = await axiosPublicApi.get(
         `/all-courses-data?page=${page}&limit=${limit}&search=${search}&sort=${sort}&filters=${filters}`

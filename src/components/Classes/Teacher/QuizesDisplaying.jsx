@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 
 export default function QuizesDisplaying() {
   const totalQuizes = useSelector((state) => state.quizes);
-  const quizeId = useSelector((state) => state.quizeId);
+  const quizeId = useSelector((state) => state.quizeReducer.quizeId);
   const [currentQuize, setCurrentQuize] = useState(1);
   const [quize, setQuize] = useState({});
   const dispatch = useDispatch();

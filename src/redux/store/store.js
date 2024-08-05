@@ -1,8 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import quizeSlice from "../reduxReducer/AddQuizes/addQuizeSlice";
+import quizeReducer from "../reduxReducer/AddQuizes/addQuizeSlice";
+import courseReducer from "../reduxReducer/AddCourses/allCoursesSlicer";
 
 const store = configureStore({
-    reducer:quizeSlice,
+  reducer: {
+    quizeReducer,
+    courseReducer,
+  },
 });
 
 export default store;

@@ -5,7 +5,9 @@ import Pagination from "../pagination/Pagination";
 import useTotalCoursesDataLoading from "@/dataFatching/useTotalCoursesDataLoading";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaSearch } from "react-icons/fa";
-import Image from "next/image";
+import { useAuth } from "@/AuthProvider/AuthProvider";
+import { useDispatch } from "react-redux";
+import { addSingleCourse } from "@/redux/reduxReducer/AddCourses/allCoursesSlicer";
 
 // course categories
 const courseCategories = [
@@ -48,13 +50,14 @@ const courseCategories = [
 ];
 
 export default function Features() {
+  const { user } = useAuth();
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCourses, setTotalCourses] = useState(0);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [filters, setFilters] = useState("");
+  const dispatch = useDispatch();
 
   // handle pagination pages
   const router = useRouter();
@@ -84,14 +87,23 @@ export default function Features() {
     }
 
     refetch();
-  }, [page, filters]);
+  }, [filters, page, sort]);
 
   // search handle
   const searchHandle = (e) => {
     e.preventDefault();
-    console.log(search);
+    setFilters("");
     refetch();
     e.target.reset();
+  };
+
+  // handle enroll now
+  const handleErroll = (item) => {
+    // if (!user) return router.push("/login");
+
+    dispatch(addSingleCourse(item));
+
+    return router.push(`/payment`);
   };
 
   return (
@@ -99,19 +111,35 @@ export default function Features() {
       <h1 className="text-3xl mb-5 font-bold">Our courses</h1>
 
       {/* all courses displaying header section */}
-      <div className="w-full flex items-center justify-between mb-10 ">
-        <select
-          onChange={(e) => setFilters(e.target.value)}
-          className="select w-full border bg-white border-gray-200 focus:outline-none max-w-xs"
-          defaultValue="Pick course"
-        >
-          <option disabled value="Pick course">
-            Pick course
-          </option>
-          {courseCategories?.map((item) => (
-            <option key={item.id}>{item.name}</option>
-          ))}
-        </select>
+      <div className="w-full flex items-center justify-between sm:gap-5 mb-10 ">
+        <div className=" border border-gray-200 rounded-md flex items-center gap-5 ">
+          {/* data filter section */}
+          <select
+            onChange={(e) => setFilters(e.target.value)}
+            className="select w-full bg-white focus:border-none  focus:outline-none max-w-xs"
+            defaultValue="Pick course"
+          >
+            <option disabled value="Pick course">
+              Pick course
+            </option>
+            {courseCategories?.map((item) => (
+              <option key={item.id}>{item.name}</option>
+            ))}
+          </select>
+
+          {/* data sorting section */}
+          <select
+            onChange={(e) => setSort(e.target.value)}
+            className="select w-full bg-white focus:border-none  focus:outline-none max-w-xs"
+            defaultValue="Sorte by"
+          >
+            <option disabled value="Sorte by">
+              Sort by
+            </option>
+            <option value="Low to high">Low to high</option>
+            <option value="High to low">High to low</option>
+          </select>
+        </div>
 
         {/* search filed */}
         <form onSubmit={searchHandle} className=" flex items-center ">
@@ -124,10 +152,10 @@ export default function Features() {
             />
             <span
               className={
-                search.length > 0 ? "hidden" : "absolute top-4 right-3"
+                search.length > 0 ? "hidden" : "absolute top-4 right-4"
               }
             >
-              <FaSearch className={"text-xl text-gray-400  "} />
+              <FaSearch className={"text-xl text-blue-500  "} />
             </span>
           </label>
           <button
@@ -169,8 +197,8 @@ export default function Features() {
           >
             <div className="w-full h-[60%]">
               <img
+                src={item?.thumbnailUrl}
                 className="w-full h-full object-cover"
-                src={item.thumbnailUrl}
                 alt={item.title}
               />
             </div>
@@ -215,7 +243,10 @@ export default function Features() {
               </div>
 
               <div>
-                <button className="bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all duration-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+                <button
+                  onClick={ () => handleErroll(item) }
+                  className="bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all duration-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+                >
                   Enroll Now
                 </button>
               </div>
