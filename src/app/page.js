@@ -5,9 +5,12 @@ import CallToAction from "@/components/Home/CallToAction";
 import Features from "@/components/Home/Features";
 import Footer from "@/components/Home/Footer";
 import OurStudentsSay from "@/components/Home/OutStudentsSay";
+import Loading from "@/components/Loading/Loading";
+import { useState } from "react";
 
 export default function Home() {
-  const user = {profession: "Student"};
+  const user = { profession: "Student" };
+ 
 
   return (
     <main className=" flex flex-col gap-[100px] bg-white ">
@@ -16,7 +19,7 @@ export default function Home() {
 
       {/* features section */}
       <div className="">
-        <Features />
+        <Features  />
       </div>
 
       {/* benefits section */}

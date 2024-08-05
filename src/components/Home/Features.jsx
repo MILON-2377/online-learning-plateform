@@ -99,11 +99,10 @@ export default function Features() {
 
   // handle enroll now
   const handleErroll = (item) => {
-    // if (!user) return router.push("/login");
-
     dispatch(addSingleCourse(item));
+    if (!user) return router.push("/login");
 
-    return router.push(`/payment`);
+    return router.push("/view-course");
   };
 
   return (
@@ -189,11 +188,12 @@ export default function Features() {
         {courses?.map((item) => (
           <motion.div
             key={item._id}
-            className="h-[400px] bg-white shadow-lg hover:scale-105 "
+            className="h-[400px] bg-white shadow-lg hover:cursor-pointer transition-all duration-200 hover:scale-150 transform "
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.5 }}
+            onClick={() => handleErroll(item)}
           >
             <div className="w-full h-[60%]">
               <img
@@ -242,12 +242,10 @@ export default function Features() {
                 )}
               </div>
 
+              {/* button section */}
               <div>
-                <button
-                  onClick={ () => handleErroll(item) }
-                  className="bg-blue-500 hover:bg-blue-600 active:scale-95 transition-all duration-200 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-                >
-                  Enroll Now
+                <button className=" px-4 py-3 rounded-md bg-blue-600 text-white ">
+                  View Details
                 </button>
               </div>
             </div>
